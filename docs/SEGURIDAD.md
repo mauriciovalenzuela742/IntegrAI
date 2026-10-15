@@ -26,7 +26,7 @@ Tres revisiones en paralelo: código del repo, infraestructura vista desde fuera
 | H6 | `GET /procesar` y `bench/*` ponían la nota del niño en la URL | Alta | ✅ GET eliminado; bench usa `INTEGRA_API_URL` |
 | H7 | Lectura arbitraria de archivos vía `Entrada.ref` (path traversal) | Alta | ✅ `src/seguridad/archivos.ruta_segura` |
 | H8 | Sin límite de tamaño ni validación de tipo de medios | Alta | ✅ Tope de 16 MB + magic bytes (webhook, EC2 y U2) |
-| H9 | Video enviado al OCR como si fuera imagen (fallaba) | Media (funcional) | ✅ El video se procesa por su pista de audio |
+| H9 | Video enviado al OCR como si fuera imagen (fallaba) | Media (funcional) | ✅ El video se **analiza visualmente** (Pegasus 1.2 vía Bedrock, fallback Nova 2 Lite: postura, apoyo, control de cabeza, desplazamiento) + audio como complemento. **Falta probar en la EC2** con un video real |
 | H10 | El clasificador y la BD recibían la **nota cruda con el nombre** del niño | Alta | ✅ U2: se clasifica y guarda el texto en **conductas sin nombres** |
 | H11 | Logs con **teléfono y texto completo** (PII de menores) | Alta | ✅ Teléfono enmascarado, solo el largo del texto |
 | H12 | Prompt injection: la nota entraba como instrucción al LLM | Media | ✅ La nota va delimitada como datos (`<nota>`) |
@@ -51,7 +51,7 @@ Tres revisiones en paralelo: código del repo, infraestructura vista desde fuera
 | Security group | Ivan | 80/8000 solo desde el prefix list de CloudFront (`com.amazonaws.global.cloudfront.origin-facing`). Cerrar 22 y 8501; administrar por SSM | — |
 | IMDSv2 obligatorio | Ivan | `aws ec2 modify-instance-metadata-options --instance-id <id> --http-tokens required` | — |
 | Secretos fuera del disco | Ivan | Secrets Manager para `WA_TOKEN`, `WA_APP_SECRET` e `INTEGRA_API_TOKEN` | — |
-| Solo datos sintéticos | Todos | Nada de fotos ni audios de niños reales en la demo | 21.430 art. 33–34 |
+| Solo datos sintéticos | Todos | Nada de fotos, audios ni **videos de niños reales** en la demo: los videos se actúan con muñeco o entre adultos. El video es el dato más sensible (imagen del niño/a) | 21.430 art. 33–34 |
 | Apagar Chatwoot fan-out | Sebastián | `CHATWOOT_FANOUT=` vacío durante el evento | 21.719 art. 15 bis |
 | Mensaje de "propuesta" | Sebastián | El ACK dice que el nivel es una propuesta para el criterio de la tía | 21.719 art. 8 bis |
 
@@ -88,7 +88,7 @@ Tres revisiones en paralelo: código del repo, infraestructura vista desde fuera
 
 | Archivo | Control |
 |---|---|
-| `webhook/server.py` | Firma HMAC fail-closed, comparación en tiempo constante del verify token, whitelist, tope de tamaño, video por audio, token hacia el backend, logs sin PII |
+| `webhook/server.py` | Firma HMAC fail-closed, comparación en tiempo constante del verify token, whitelist, tope de tamaño, video enviado como video, token hacia el backend, logs sin PII |
 | `webhook_ec2.py` | `X-Api-Key` en `/procesar`, `/procesar_media` y `/clasificar`. Sin `GET /procesar`. Swagger apagado (`INTEGRA_DOCS=1` para desarrollo). `/health` mínimo. Magic bytes. Temporales que se borran. U2 delante del ensemble (`U2_CONDUCTAS=1`) |
 | `src/seguridad/webhook.py` | `verificar_firma`, `telefono_autorizado` y `enmascarar`, reutilizables |
 | `src/seguridad/archivos.py` | `ruta_segura` (confinada a `DIR_MEDIOS`) y `validar_medio` (16 MB + magic bytes) |

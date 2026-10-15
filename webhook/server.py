@@ -127,7 +127,8 @@ def procesar_texto(de: str, texto: str) -> str:
 def procesar_media(de: str, tipo: str, blob: bytes, caption: str) -> str:
     if not BACKEND_URL:
         return "registrado ✓ (sin backend)"
-    # el video se procesa por su pista de audio (antes iba al OCR como si fuera imagen y fallaba)
+    # el video va como video: el backend lo analiza visualmente (Pegasus) + audio
+    # (antes iba al OCR como si fuera una imagen y fallaba)
     tipo_be = {"audio": "audio", "video": "video", "image": "image"}.get(tipo)
     if not tipo_be:
         return "⚠️ Ese tipo de archivo no se procesa. Envía texto, foto, audio o video."

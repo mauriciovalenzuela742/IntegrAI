@@ -183,21 +183,48 @@ def extraer_texto_ocr(img_bytes: bytes, fmt: str = "jpeg") -> str:
         return ""
 
 
-def transcribir_audio_bytes(data: bytes, ext: str = ".ogg", video: bool = False) -> str:
-    """Escribe a un temporal seguro, transcribe (video: su pista de audio) y BORRA el archivo."""
+def _con_temporal(data: bytes, ext: str, fn):
+    """Escribe el medio en un temporal dentro de DIR_MEDIOS, aplica `fn(ruta)` y SIEMPRE lo borra."""
+    from src.seguridad.archivos import directorio_medios
+    d = directorio_medios(); d.mkdir(parents=True, exist_ok=True)
     f = None
     try:
-        from src.procesadores import extraer_audio_video, transcribir_audio
-        with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as t:
+        with tempfile.NamedTemporaryFile(suffix=ext, delete=False, dir=d) as t:
             t.write(data)
             f = t.name
-        return extraer_audio_video(f) if video else transcribir_audio(f)
-    except Exception as e:  # noqa: BLE001
-        print(f"[whisper] error: {type(e).__name__}", flush=True)
-        return ""
+        return fn(f)
     finally:
         if f and _os.path.exists(f):
             _os.unlink(f)
+
+
+def transcribir_audio_bytes(data: bytes, ext: str = ".ogg") -> str:
+    try:
+        from src.procesadores import transcribir_audio
+        return _con_temporal(data, ext, transcribir_audio)
+    except Exception as e:  # noqa: BLE001
+        print(f"[whisper] error: {type(e).__name__}", flush=True)
+        return ""
+
+
+def analizar_video_bytes(data: bytes, ext: str = ".mp4") -> tuple[str, str]:
+    """(texto_visual, texto_audio). Lo VISUAL es lo principal: Pegasus 1.2 describe postura, apoyo,
+    control de cabeza, desplazamiento y manos con timestamps (fallback Nova 2 Lite).
+    El audio (Whisper) complementa: comentarios de la tía o el nombre del niño/a."""
+    def _ambos(ruta: str) -> tuple[str, str]:
+        from src.multimodal.video import describir_video
+        from src.procesadores import extraer_audio_video   # ruta ffmpeg que ya funciona en la EC2
+        visual = describir_video(ruta).texto
+        try:
+            audio = extraer_audio_video(ruta)
+        except Exception:  # noqa: BLE001
+            audio = ""
+        return visual, audio
+    try:
+        return _con_temporal(data, ext, _ambos)
+    except Exception as e:  # noqa: BLE001
+        print(f"[video] error: {type(e).__name__}", flush=True)
+        return "", ""
 
 
 class MediaMsg(BaseModel):
@@ -225,7 +252,15 @@ def procesar_media(m: MediaMsg) -> dict:
     if m.tipo == "audio" and real in ("ogg", "mp3", "wav", "mp4"):
         texto = transcribir_audio_bytes(data, ext=f".{real}")
     elif m.tipo == "video" and real in ("mp4", "webm"):
-        texto = transcribir_audio_bytes(data, ext=f".{real}", video=True)
+        visual, audio = analizar_video_bytes(data, ext=f".{real}")
+        if not visual:
+            return {"ok": False, "estado": "video_sin_analisis",
+                    "ack": "⚠️ No pude analizar el video. Reenvíalo (máx. 16 MB) o describe lo que viste."}
+        # el pie de foto y el audio van primero: ahí suele venir el nombre que usa el resolver;
+        # la descripción visual (sin nombres) es la observación que se clasifica
+        texto = " ".join(p for p in ((m.caption or ""), audio, visual) if p).strip()
+        print(f"[media] video -> visual {len(visual)} chars, audio {len(audio)} chars", flush=True)
+        return _procesar(m.from_, texto)
     elif m.tipo == "image" and real in ("jpeg", "png", "webp", "gif"):
         texto = extraer_texto_ocr(data, fmt=real)
     else:

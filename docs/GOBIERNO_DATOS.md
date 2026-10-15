@@ -9,7 +9,7 @@
 
 1. **Interés superior del niño/a** (art. 16 quáter, Ley 21.430): ningún uso de los datos puede perjudicarlo ni estigmatizarlo. El sistema entrega **señales para revisión profesional**, nunca un diagnóstico.
 2. **Finalidad única:** apoyar el seguimiento pedagógico del desarrollo. Prohibido usar los datos para otros fines (por ejemplo, entrenar modelos de terceros o comercializarlos).
-3. **Minimización:** se recoge solo lo necesario. Se prefiere el texto al audio y el audio al video; los medios crudos se borran en ≤ 24 h.
+3. **Minimización:** se recoge solo lo necesario. El video se usa cuando aporta lo que el texto no muestra (motricidad: pararse, sostener la cabeza, gatear); se analiza, se convierte en conductas y el archivo se borra en ≤ 24 h (hoy, al terminar de procesar). Nunca se guarda ni se reenvía la imagen del niño/a.
 4. **Seudonimización:** fuera de la sala, el niño/a es `NINO-xxxxx`. El nombre solo sirve para resolver el ID y **no** se envía al clasificador, no se guarda en la observación y no aparece en logs.
 5. **Humano en el loop** (art. 8 bis): el nivel lo confirma la educadora; la compuerta manda a revisión los casos dudosos.
 6. **Transparencia:** cada decisión guarda su evidencia (conductas citadas), la versión del modelo y del prompt, el margen y quién confirmó.
@@ -58,7 +58,7 @@
 | Equipo regional / nacional | — | — | — | Ver | — | — |
 | DPD | Por solicitud ARCO / auditoría | Ídem | Ídem | Ver | Por incidente | Auditoría |
 | DevOps | — | — | — | — | — (solo infraestructura) | Infraestructura |
-| Modelo (Bedrock) | Solo texto sin nombres y medios ≤ 16 MB, sin retención | — | — | — | — | — |
+| Modelo (Bedrock: Claude, Nova, TwelveLabs Pegasus para video) | Solo texto sin nombres y medios ≤ 16 MB, sin retención; el video se analiza para describir conductas y se descarta | — | — | — | — | — |
 
 ## 6. Gobierno de la IA
 

@@ -1,8 +1,9 @@
-"""Etapa 1 · video → texto: pista de audio (Whisper) + lo visual (Pegasus 1.2, fallback Nova 2 Lite).
+"""Etapa 1 · video → texto: ANÁLISIS VISUAL (Pegasus 1.2, fallback Nova 2 Lite) + audio como complemento.
 
-Antes solo se usaba el audio; pero la mitad del catálogo es motora/socioemocional y
-se ve, no se escucha. Los videos de WhatsApp pesan ≤ 16 MB, así que se envían inline
-(base64) sin necesidad de bucket.
+Lo que importa de un video es lo que se ve: si el niño/a se para solo o con apoyo, si levanta y
+sostiene la cabeza, cómo gatea o toma objetos. La mitad del catálogo es motora y no se escucha.
+La pista de audio (Whisper) solo complementa: lo que la tía comenta al grabar, o el nombre.
+Los videos de WhatsApp pesan ≤ 16 MB, así que se envían inline (base64) sin necesidad de bucket.
 """
 from __future__ import annotations
 
@@ -16,11 +17,19 @@ from ._bedrock import cliente, converse
 from .audio import transcribir
 from .schema import Segmento
 
-PROMPT_VIDEO = ("Eres una educadora de párvulos. Describe SOLO las conductas observables del niño o niña "
-                "en este video, en frases cortas en presente y tercera persona, cada una precedida por el "
-                "segundo aproximado entre corchetes, por ejemplo: '[3s] Se pone de pie apoyándose en una silla.' "
-                "Incluye postura, desplazamiento, manipulación de objetos, mirada, gestos, vocalizaciones e "
-                "interacción con otros. No nombres a nadie, no describas rasgos físicos ni ropa, no estimes edad ni nivel.")
+PROMPT_VIDEO = ("Eres una educadora de párvulos observando un video de un niño o niña de 0 a 3 años. "
+                "Describe SOLO lo que se VE, en frases cortas en presente y tercera persona, cada una precedida "
+                "por el segundo aproximado entre corchetes. Sé preciso en lo motor, porque eso define el nivel: "
+                "- Control de cabeza y tronco: si levanta o sostiene la cabeza (boca abajo, sentado, en brazos) y cuánto tiempo. "
+                "- Postura: acostado, sentado con o sin apoyo, gateando, de pie. "
+                "- Apoyo: distingue SIEMPRE 'sin apoyo' de 'con apoyo' y di en qué se apoya (mueble, adulto, pared). "
+                "- Desplazamiento: rueda, se arrastra, gatea, da pasos (cuántos), camina, corre, sube. "
+                "- Manos: alcanza, toma con toda la mano o con pinza, transfiere, apila, suelta. "
+                "- Mirada, gestos, vocalizaciones e interacción con otros. "
+                "Ejemplos: '[2s] Boca abajo, levanta la cabeza y la sostiene unos 5 segundos.' "
+                "'[8s] Se pone de pie sin apoyo y da tres pasos solo.' "
+                "Si algo no se ve con claridad, dilo ('no se distingue si se apoya'). "
+                "No nombres a nadie, no describas rasgos físicos ni ropa, no estimes edad ni nivel.")
 
 MAX_INLINE = 25 * 1024 * 1024
 
