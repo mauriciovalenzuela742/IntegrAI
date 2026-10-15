@@ -42,3 +42,10 @@ def test_medio_inexistente_da_advertencia():
     e = SimpleNamespace(tipo="foto", ref="no_existe.jpg", pie="", texto_extraido="")
     obs = normalizar_entradas([e], etapa2=False)
     assert obs.transcripcion == ""
+
+
+def test_video_negativa_no_pasa_como_observacion():
+    from src.multimodal.video import es_negativa
+    assert es_negativa("Sorry, no puedo generar una descripción detallada de las acciones motoras.")
+    assert es_negativa("   ")
+    assert not es_negativa("[00:02] Se pone de pie sin apoyo y da tres pasos.")

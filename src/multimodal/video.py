@@ -49,12 +49,25 @@ def _nova(path: str) -> str:
     return converse(config.MODELO_VIDEO_FALLBACK, contenido, max_tokens=700)["texto"]
 
 
+_NEGATIVAS = ("no puedo", "lo siento", "sorry", "i can't", "i cannot", "no es posible", "no me es posible")
+
+
+def es_negativa(texto: str) -> bool:
+    """Respuesta que no describe el video (negativa o descargo). Probado: Nova 2 Lite se niega a veces."""
+    t = texto.lower()
+    return not t.strip() or ("[" not in t and any(n in t[:200] for n in _NEGATIVAS))
+
+
 def describir_video(path: str) -> Segmento:
     adv: list[str] = []
     for nombre, fn, modelo in (("pegasus", _pegasus, config.MODELO_VIDEO),
                                ("nova", _nova, config.MODELO_VIDEO_FALLBACK)):
         try:
             texto = fn(path).strip()
+            if es_negativa(texto):
+                logging.getLogger(__name__).warning("%s no describió el video (negativa)", nombre)
+                adv.append("descripción visual no disponible")
+                continue
             if texto:
                 return Segmento(fuente="video_visual", texto=texto, calidad=0.8, modelo=modelo,
                                 advertencias=adv + ["descripción visual generada por modelo: revisar"])

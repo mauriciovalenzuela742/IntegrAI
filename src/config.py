@@ -25,7 +25,7 @@ WHISPER_MODEL = os.getenv("WHISPER_MODEL", "large-v3-turbo")
 MODELO_OCR = os.getenv("MODELO_OCR", "us.anthropic.claude-sonnet-5")
 MODELO_OCR_VERIF = os.getenv("MODELO_OCR_VERIF", "us.amazon.nova-2-lite-v1:0")
 MODELO_VIDEO = os.getenv("MODELO_VIDEO", "us.twelvelabs.pegasus-1-2-v1:0")
-MODELO_VIDEO_FALLBACK = os.getenv("MODELO_VIDEO_FALLBACK", "us.amazon.nova-2-lite-v1:0")
+MODELO_VIDEO_FALLBACK = os.getenv("MODELO_VIDEO_FALLBACK", "us.amazon.nova-pro-v1:0")  # Nova 2 Lite se negó en pruebas
 MODELO_CONDUCTAS = os.getenv("MODELO_CONDUCTAS", "us.anthropic.claude-sonnet-5")
 
 # auto = Bedrock si hay credenciales, si no MOCK | "1" = fuerza MOCK

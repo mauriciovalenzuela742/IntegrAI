@@ -14,7 +14,25 @@
 
 ## 2. Hallazgos (auditoría del 15-oct)
 
-Tres revisiones en paralelo: código del repo, infraestructura vista desde fuera y requisitos legales. La auditoría interna de la cuenta AWS (SG, IMDSv2, IAM, CloudTrail, GuardDuty) **quedó pendiente**: las credenciales del evento vencieron. Se repite cuando se renueven.
+Tres revisiones en paralelo (código del repo, infraestructura vista desde fuera y requisitos legales) y una **auditoría interna de solo lectura** de la cuenta AWS y de `integra-server` por SSM (15-oct, 13:40 UTC).
+
+**Auditoría interna (cuenta AWS + instancia):**
+
+| Control | Estado | Acción |
+|---|---|---|
+| IMDSv2 | ✅ Obligatorio (`HttpTokens=required`) | — |
+| Security group | ⚠️ 22 y 8501 limitados a 1 IP. **80, 443 y 8000 abiertos a `0.0.0.0/0`** | Ivan: 80/8000 solo desde CloudFront |
+| Cifrado EBS | ❌ Volumen **sin cifrar**; cifrado por defecto de la cuenta apagado | Ivan: activar el cifrado por defecto y migrar el volumen (snapshot → copia cifrada) |
+| Servicios | ❌ `integra-webapi` (uvicorn :8000) e `integra` (Streamlit :80) corren **como root** | Ivan/Sebastián: usuario dedicado sin privilegios |
+| Variables de seguridad en la EC2 | ❌ Ninguna definida (`INTEGRA_API_TOKEN` incluida) | Sebastián: definirlas al desplegar este PR |
+| Despliegue | ⚠️ `/opt/integra` no es un clon de git (se sube por SSM) | Desplegar desde `main` con `git pull` para tener trazabilidad |
+| Rol IAM | ⚠️ La EC2 usa el rol del escritorio Kiro (`WorkshopPermissions` + SSM + lista de modelos permitidos de Bedrock) | Ivan: rol propio con mínimo privilegio (Bedrock InvokeModel en los modelos usados + SSM) |
+| CloudTrail | ✅ 2 trails multi-región (del evento) | — |
+| GuardDuty / Security Hub | No visibles (el evento lo bloquea) | Activar en la cuenta de Integra |
+| AWS Config, Budgets | ❌ No configurados | F1 |
+| Secrets Manager | ⚠️ Solo secretos del evento; los de Meta no están ahí | Ivan: guardar los secretos de Meta |
+| Logging de invocaciones de Bedrock | ✅ Desactivado (los prompts con datos de niños no se guardan) | Mantener |
+| S3 | Sin buckets | Al crearlo: Block Public Access, KMS, lifecycle de 24 h |
 
 | # | Hallazgo | Severidad | Estado |
 |---|---|---|---|
@@ -26,7 +44,7 @@ Tres revisiones en paralelo: código del repo, infraestructura vista desde fuera
 | H6 | `GET /procesar` y `bench/*` ponían la nota del niño en la URL | Alta | ✅ GET eliminado; bench usa `INTEGRA_API_URL` |
 | H7 | Lectura arbitraria de archivos vía `Entrada.ref` (path traversal) | Alta | ✅ `src/seguridad/archivos.ruta_segura` |
 | H8 | Sin límite de tamaño ni validación de tipo de medios | Alta | ✅ Tope de 16 MB + magic bytes (webhook, EC2 y U2) |
-| H9 | Video enviado al OCR como si fuera imagen (fallaba) | Media (funcional) | ✅ El video se **analiza visualmente** (Pegasus 1.2 vía Bedrock, fallback Nova 2 Lite: postura, apoyo, control de cabeza, desplazamiento) + audio como complemento. **Falta probar en la EC2** con un video real |
+| H9 | Video enviado al OCR como si fuera imagen (fallaba) | Media (funcional) | ✅ El video se **analiza visualmente** con Pegasus 1.2 (**probado el 15-oct** con un video sintético: distingue "de pie con apoyo" de "se desplaza sin apoyo" en ~8 s), con respaldo Nova Pro y audio como complemento. Nova 2 Lite **se negó** a describir el video, así que se descartó como respaldo y las negativas se detectan. Las descripciones varían entre corridas: el video **siempre** debe pasar por la revisión de la tía |
 | H10 | El clasificador y la BD recibían la **nota cruda con el nombre** del niño | Alta | ✅ U2: se clasifica y guarda el texto en **conductas sin nombres** |
 | H11 | Logs con **teléfono y texto completo** (PII de menores) | Alta | ✅ Teléfono enmascarado, solo el largo del texto |
 | H12 | Prompt injection: la nota entraba como instrucción al LLM | Media | ✅ La nota va delimitada como datos (`<nota>`) |
