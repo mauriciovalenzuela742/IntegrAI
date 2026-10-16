@@ -10,7 +10,7 @@ uso:
 Requiere requirements-rag.txt (pypdf, fonttools). `indexar` sin `--sin-embeddings` necesita Bedrock
 (Titan v2): si un embedding falla, no se escribe un índice a medias.
 
-Los PDF públicos se descargan a RAG/ desde url_oficial de RAG/MANIFEST.csv (no se versionan). El índice con texto extraído vive en privado/ (.gitignore) y no se publica.
+Los PDF públicos viven en RAG/. El índice con texto extraído vive en privado/ (.gitignore) y no se publica.
 Los checklists del CDC (2021) usan fuentes Arial sin tabla ToUnicode: el código de cada carácter es
 el número de glifo de Arial. Se decodifican con la tabla `_GLIFOS_ARIAL`, verificada contra el cmap
 de arial.ttf (4503 glifos) el 15-oct-2026.

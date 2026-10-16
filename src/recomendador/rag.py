@@ -1,7 +1,7 @@
 """Recuperación de pasajes de las fuentes profesionales (RAG local) para el recomendador.
 
 - El índice `privado/rag/indice.json` lo genera `tools/rag_ingestar.py` desde los PDF públicos
-  en `RAG/` (descargados desde `RAG/MANIFEST.csv`; no versionados). Solo el índice con texto extraído permanece ignorado en `privado/`.
+  versionados en `RAG/`. Solo el índice con texto extraído permanece ignorado en `privado/`.
 - Búsqueda híbrida: coseno con Titan v2 (si el índice tiene embeddings y hay Bedrock) + léxico.
   En modo mock, en la CI o sin índice: solo léxico, o nada, con un aviso por stderr.
 - La consulta la arma el código, en español y en inglés (la OMS y el CDC están en inglés y la

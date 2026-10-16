@@ -65,6 +65,3 @@ data/marcos/integra_*.json
 *.docx
 bench/casos_rubrica.jsonl
 bench/detalle_rubrica*.jsonl
-
-# PDF del corpus RAG: licencia de redistribución por confirmar; se descargan de url_oficial (RAG/MANIFEST.csv)
-RAG/*.pdf
