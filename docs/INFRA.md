@@ -12,6 +12,10 @@
 
 La demo **no** crea infraestructura serverless nueva: reutiliza lo que existe. El camino serverless queda documentado como plan (§6) para que Integra lo despliegue sin reescribir la lógica.
 
+## 1.1 Demo RAG de la rama (no desplegada)
+
+La rama `recomendador-rag` agrega un flujo estático para Pages: fuentes públicas `RAG/` → ingesta e índice léxico local ignorado → análisis determinístico → recomendador → JSON sintético → cola humana → ficha. No corre en la EC2 ni modifica CloudFront/WhatsApp. La integración backend, persistencia y RBAC son objetivos futuros.
+
 ## 2. Componentes y estado (auditado el 15-oct, tarde)
 
 ![Infraestructura TI: hoy vs. objetivo](img/infra_ti.png)

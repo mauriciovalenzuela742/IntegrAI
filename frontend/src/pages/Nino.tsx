@@ -11,8 +11,27 @@ import { ajustarNivel, usaApi } from '../data/cargar';
 import { useRevision } from '../data/RevisionContext';
 import { tieneAccesoNino } from '../domain/acceso';
 import { fichaNino, nivelPorNumero } from '../domain/consultas';
+import { useRecomendaciones } from '../data/RecomendacionesContext';
 
 const HOY = new Date();
+
+function RecomendacionesFicha({ idNino }: { idNino: string }) {
+  const { aprobadasDe, pendientes } = useRecomendaciones();
+  const aprobadas = aprobadasDe(idNino);
+  const tienePendientes = pendientes.some((item) => item.idNino === idNino);
+  if (aprobadas.length === 0 && !tienePendientes) return null;
+  return (
+    <section aria-label="Recomendaciones pedagógicas" className="panel">
+      <h3>Recomendaciones pedagógicas</h3>
+      {aprobadas.map((item) => <article key={item.idRecomendacion} className="recomendacion-ficha">
+        <p>{item.textoVisible}</p>
+        {item.sugerencias.map((s, i) => <p key={i}>{s.texto}</p>)}
+        <p className="recomendacion__limite">{item.aviso}</p>
+      </article>)}
+      {tienePendientes && <p><a href="#/pendientes">Hay propuestas pendientes; revísalas en Por verificar.</a></p>}
+    </section>
+  );
+}
 
 export function Nino() {
   const { idNino = '' } = useParams();
@@ -125,6 +144,8 @@ export function Nino() {
               <p className="ficha-descripcion">{vista.nivelVigenteInfo.descripcion}</p>
             </section>
           )}
+
+          <RecomendacionesFicha idNino={idNino} />
 
           {vista.ficha.ajustadoManual && (
             <p className="ficha-descripcion" role="status">

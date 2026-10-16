@@ -1,8 +1,10 @@
 # Recomendador RAG — plan y checkpoint
 
-**Estado: PAUSADO / CHECKPOINT**
-**Fecha:** 15-oct-2026
+**Estado: DEMO ESTÁTICA IMPLEMENTADA / UMBRALES POR VALIDAR**
+**Fecha de implementación:** rama `recomendador-rag`
 **Rama de trabajo:** `recomendador-rag`
+
+> Las secciones históricas de checkpoint se conservan como trazabilidad. El estado ejecutado y las verificaciones vigentes están en **8.0** y **10.0**.
 
 Este documento conserva el diseño aprobado y el progreso real del recomendador referenciado de IntegrAI. Es autosuficiente para retomar el trabajo sin depender de conversaciones previas. El código de este checkpoint es parcial, no está integrado en producción y no debe presentarse como una función terminada.
 
@@ -28,7 +30,7 @@ Esta fase es una demo fuera de producción. No modifica la EC2, `webhook_ec2.py`
 2. **Dos análisis complementarios.** Se analizan hitos concretos por niño/a y la comparación con su curso; además se compara el nivel vigente con el esperado y con la media del curso.
 3. **Revisión humana universal.** Todo item nace en `por_verificar`; solo la educadora puede aprobarlo, corregirlo o descartarlo.
 4. **Demo por lote.** Primero se genera un JSON estático para el dashboard. Integración backend, persistencia y WhatsApp quedan fuera de esta fase.
-5. **Corpus privado local.** Los PDF y el índice viven en `privado/rag/`, que está ignorado por Git. El repositorio público solo puede contener metadatos y citas de hasta 300 caracteres.
+5. **Corpus público versionado; índice privado.** Los 19 PDF autorizados por el usuario se versionan en `RAG/` con manifiesto, hashes y licencia `por confirmar` cuando corresponde. Que sean publicaciones accesibles no implica licencia abierta. El índice con texto completo extraído vive en `privado/rag/indice.json` y no se versiona.
 6. **Determinismo antes del LLM.** Edad, zonas, estado del hito, curso, brechas y reglas de disparo se calculan en código. El LLM extrae información tipada y redacta a partir de hallazgos y pasajes permitidos; no decide las reglas ni las fuentes a consultar.
 7. **Modelos aprobados.** Extracción y redacción: `us.anthropic.claude-sonnet-5`; evaluación DeepEval: `us.anthropic.claude-opus-5`; embeddings: `amazon.titan-embed-text-v2:0`. No usar Sonnet 5.5 ni Haiku 5.5.
 8. **UNICEF fuera de alcance por ahora.** El corpus de esta fase usa OMS, CDC y Bases Curriculares.
@@ -36,6 +38,7 @@ Esta fase es una demo fuera de producción. No modifica la EC2, `webhook_ec2.py`
 ## 3. Principios de seguridad, privacidad y evidencia
 
 - No enviar nombres de niños/as en prompts ni escribirlos en el JSON público. Usar identificadores sintéticos o internos no nominativos.
+- Los 19 PDF autorizados se publican en `RAG/`; el índice, texto completo extraído y embeddings no se publican. Las citas expuestas por la demo no superan 300 caracteres.
 - **Sin registro no equivale a no logrado.** `no_logrado` solo se asigna cuando existe una nota explícita con cita literal que sustente la negación.
 - Cada afirmación debe poder trazarse a un hallazgo determinístico o a una cita profesional recuperada.
 - Las citas públicas deben ser literales, de máximo 300 caracteres, e incluir fuente y página del PDF.
@@ -256,6 +259,17 @@ La tabla de ventanas redondea el p1 de caminar con ayuda a 6,0, mientras la tabl
 
 ## 8. Plan de tareas, criterios de aceptación y progreso
 
+### 8.0 Estado ejecutado en esta rama
+
+- [x] **A/B/C:** 19 PDF versionados con SHA-256 real; 19 metadatos; seis normas OMS, equivalencias CDC, bordes, consultas bilingües e índice léxico offline.
+- [x] **D/E/F:** análisis determinístico con paridad E-1; privacidad/inyección; extracción tipada opcional; contrato y schema; validadores, redactor, fallback y API `recomendar()`.
+- [x] **H/I:** diez notas demo y veinte casos; lote público reproducible con IDs existentes; no se alteró el dataset para crear a Emilio.
+- [x] **J:** carga en modos CSV/API, decisiones locales accesibles, nueva cola RAG y ficha con solo aprobadas; se conserva la tabla API existente.
+- [x] **K:** tests offline y bench de veinte casos; DeepEval se documenta como opcional, sin resultados inventados.
+- [x] **L/M demo:** documentación, corpus y diagramas actualizados; build incluye `recomendaciones.json` y base `/IntegrAI/`.
+- [~] **Modelos administrados:** rutas Sonnet/Titan implementadas u opcionales; no se validaron contra AWS en esta fase offline.
+- [ ] **Checkpoint clínico/productivo:** validar umbrales y equivalencias; integrar persistencia/RBAC/cola; corregir con Sebastián el bug conocido; desplegar solo tras revisión.
+
 Leyenda: `[x]` terminado; `[~]` parcial; `[ ]` pendiente.
 
 ### [~] Task 1 — Normas por hito, zonas y checkpoint humano
@@ -392,6 +406,23 @@ No se crearon todavía `src/recomendador/fuentes.json`, `src/recomendador/normas
 - `bench/reporte_api.md`: preexistente y ajeno a este checkpoint; no incluir.
 
 No se debe usar `git add -f` para ningún archivo privado o ignorado.
+
+## 10.0 Verificación integral de la implementación
+
+Se ejecuta al cierre con `MODO_MOCK=1`; los resultados exactos quedan registrados aquí antes del commit final.
+
+- Dependencias locales: `pypdf==6.20.1`, `fonttools==4.67.0`; DeepEval no instalado ni versionado. Para regenerar diagramas se instaló localmente `matplotlib==3.10.8` sin añadirlo al runtime.
+- `MODO_MOCK=1; python -m pytest -q tests`: **99 pruebas aprobadas**.
+- `tools/rag_ingestar.py verificar`: **19/19 fuentes calzan**. Índice léxico offline: **689 fragmentos, 19 fuentes**. Smoke `sentarse_sin_apoyo`: CDC 9 meses, p. PDF 1, fragmento literal “Sits without support”.
+- Lote generado dos veces: **19 recomendaciones validadas**; SHA-256 normalizado sin `generado_en` idéntico: `3ae9164afeaf9a655c350098882b3e81eaba215d28949c7f027c14a7995b0b11`.
+- `python -m bench.recomendador.evaluar --check`: **20/20 casos** cumplen todos los controles determinísticos.
+- `frontend/npm test`: **9 archivos, 43/43 pruebas aprobadas**. `npm run build`: **exitoso**, 865 módulos; queda solo la advertencia no bloqueante de chunk JS >500 kB.
+- `frontend/dist`: contiene `recomendaciones.json` con **19 items** y `index.html` usa base **`/IntegrAI/`**.
+- Diagramas regenerados e inspeccionados: 2122×1185 px ambos, contenido visible, sin cajas vacías ni texto cortado.
+- Integridad del corpus: **19 PDF**, bytes y SHA-256 idénticos al origen y a `RAG/MANIFEST.csv`.
+- `git diff --check`: sin errores. Auditoría de 55 textos modificados/nuevos: **0 BOM, 0 CRLF** (UTF-8/LF).
+- Escaneo de rutas staged: **0 secretos, tokens, IPv4 públicas, IDs de instancia/cuenta o teléfonos**; `.kiro/`, `_u.py`, `bench/reporte_api.md`, `.venv/` y `privado/` no están staged.
+
 
 ## 10. Entorno y comandos reproducibles
 

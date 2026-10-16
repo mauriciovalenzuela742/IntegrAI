@@ -44,6 +44,10 @@ Una tía de jardín envía por **WhatsApp** una observación de un niño/a: **te
 
 > Datos 100 % sintéticos. No es un instrumento clínico ni diagnóstico. Toda clasificación es una propuesta para el criterio de la educadora (Ley 21.719, art. 8 bis: revisión humana).
 
+## Demo RAG referenciada (rama `recomendador-rag`)
+
+Esta rama añade una demo **fuera de producción** entre el clasificador y la revisión humana: 19 publicaciones OMS/CDC/MINEDUC → índice léxico local → análisis determinístico → propuestas con citas → `data/recomendaciones.json` → cola **Por verificar** → ficha si la educadora aprueba. En Pages, abrir `#/pendientes`; el caso `REC-00001` usa `NINO-00001`. Los umbrales siguen por validar y no se ha desplegado esta función en EC2 ni WhatsApp. Ver [`docs/RECOMENDADOR.md`](docs/RECOMENDADOR.md).
+
 ## Arquitectura (lo que corre hoy)
 
 **Infraestructura TI, hoy vs. objetivo** (auditada el 15-oct; se regenera con `python tools/diagramas.py`):
@@ -73,7 +77,10 @@ Usuarios ─► CloudFront (HTTPS) ─► / React (S3) · /streamlit :80 · API 
 | `src/marcos.py`, `src/clasificador_rubrica.py` | **Rúbrica de Integra** como marco principal: tramos por edad (regla del 31 de marzo), anclas, juez LLM |
 | `src/` (resto) | Matcher híbrido, decisores (Laya / ensemble), compuerta, plataforma SQLite, resolver, evaluación periódica |
 | `src/seguridad/` | Firma del webhook, whitelist, rutas confinadas, validación de medios |
-| `frontend/`, `app.py` | Dashboard React (Vite + TS, en la raíz de la web) y dashboard Streamlit (en `/streamlit/`) |
+| `RAG/` | 19 PDF públicos OMS/CDC/MINEDUC autorizados, README de procedencia y manifiesto SHA-256; el índice extraído sigue privado |
+| `src/recomendador/`, `tools/rag_ingestar.py`, `tools/recomendar_lote.py` | Recomendador RAG offline: normas, análisis, privacidad, contrato, recuperación y lote validado |
+| `data/recomendaciones.json` | Contrato público sintético que alimenta la cola RAG de la demo |
+| `frontend/`, `app.py` | Dashboard React (incluye revisión local de recomendaciones en Pages) y dashboard Streamlit |
 | `infra/`, `tools/*_aws.py` | Infraestructura como código (CloudFormation) y scripts de seguridad/operación AWS |
 | `bench/` | Benchmarks y evaluaciones reproducibles (rúbrica, contra la edad, multimodal, compuerta) |
 | `data/` | Dataset sintético E-1 (7 CSV). La rúbrica de Integra **no** está en el repo (`privado/`, ver `tools/importar_rubrica.py`) |
@@ -83,6 +90,7 @@ Usuarios ─► CloudFront (HTTPS) ─► / React (S3) · /streamlit :80 · API 
 
 | Tema | Documento |
 |---|---|
+| Recomendador RAG (demo estática, corpus, ejecución y límites) | [`docs/RECOMENDADOR.md`](docs/RECOMENDADOR.md), [`docs/PLAN_RECOMENDADOR_RAG.md`](docs/PLAN_RECOMENDADOR_RAG.md) |
 | Plan del equipo, ruta de lo construido y pendientes | [`docs/PLAN.md`](docs/PLAN.md) |
 | Rúbrica oficial, tramos y resultados (juez 65 % exacto, 89 % en aceptados) | [`docs/MARCO_RUBRICA.md`](docs/MARCO_RUBRICA.md) |
 | Seguridad: hallazgos, avance y corte coordinado | [`docs/SEGURIDAD.md`](docs/SEGURIDAD.md) |

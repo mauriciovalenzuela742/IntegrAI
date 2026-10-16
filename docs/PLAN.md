@@ -30,6 +30,12 @@ Tía (WhatsApp) → U1 Gateway (firma + whitelist) → SQS → Worker
 | 9 | Python 3.12, SAM | Se mantiene. Lambda `python3.12`, Pydantic v2 empaquetado con `sam build --use-container`, o en una capa con wheels `manylinux` | `pydantic_core` es binario; un build desde Windows sin contenedor falla en Lambda. |
 | 10 | Presupuesto Kiro "10,000" | Con **Kiro Pro** ya activo, son créditos, no tokens. El reparto por unidad sigue igual | Aclara la duda que quedó abierta en el plan de Kiro. |
 
+## 2.0 Adición en rama: demo del recomendador RAG
+
+En `recomendador-rag` se implementó, sin desplegar a producción, la estación propuesta entre clasificador y cola humana. Usa 19 PDF públicos OMS/CDC/MINEDUC, análisis determinístico, citas breves y un lote sintético consumido por React. La cola permite aprobar/editar/descartar localmente y la ficha muestra solo aprobadas. Umbrales y equivalencias continúan por validar. Detalle y comandos: [`RECOMENDADOR.md`](RECOMENDADOR.md).
+
+Se documenta sin corregir el bug del área de Sebastián: `_procesar` no encola observaciones `por_verificar` y el cron las excluye. La demo estática no depende de esa integración.
+
 ## 2. Estado y ruta de lo construido (actualizado 15-oct, 15:00)
 
 🌐 **Web (HTTPS):** https://d2eg8hbkfurj9b.cloudfront.net — dashboard + API de decisión detrás de CloudFront.

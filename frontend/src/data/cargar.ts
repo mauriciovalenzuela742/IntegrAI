@@ -10,6 +10,8 @@ import type {
   Observacion,
   ObservacionManifestacion,
   Pendiente,
+  LoteRecomendaciones,
+  Recomendacion,
 } from '../domain/tipos';
 
 export interface Datos {
@@ -278,6 +280,44 @@ export async function ajustarNivel(idNino: string, nivel: number, resueltoPor?: 
   if (datos && datos.ok === false) {
     throw new Error(datos.error ?? 'no se pudo ajustar el nivel');
   }
+}
+
+function recomendacionDesde(f: Record<string, unknown>): Recomendacion {
+  const hito = f.hito as Record<string, unknown> | null;
+  return {
+    idRecomendacion: String(f.id_recomendacion), idNino: String(f.id_nino),
+    idJardin: String(f.id_jardin), salaGrupo: String(f.sala_grupo), estadoRevision: 'por_verificar',
+    hito: hito ? { id: String(hito.id), estado: String(hito.estado), zona: String(hito.zona), edadMeses: Number(hito.edad_meses) } : null,
+    hallazgosDeterministicos: ((f.hallazgos_deterministicos ?? []) as Record<string, unknown>[]).map((h) => ({
+      id: String(h.id), tipo: String(h.tipo), regla: String(h.regla), resultado: String(h.resultado),
+      observacionIds: (h.observacion_ids ?? []) as string[],
+    })),
+    resumen: String(f.resumen),
+    sugerencias: ((f.sugerencias ?? []) as Record<string, unknown>[]).map((s) => ({
+      texto: String(s.texto), citas: ((s.citas ?? []) as Record<string, unknown>[]).map((c) => ({
+        fuenteId: String(c.fuente_id), organizacion: String(c.organizacion), titulo: String(c.titulo),
+        paginaPdf: Number(c.pagina_pdf), fragmento: String(c.fragmento), url: String(c.url),
+      })),
+    })),
+    derivacionSalud: Boolean(f.derivacion_salud), aviso: String(f.aviso),
+  };
+}
+
+/** Recomendaciones estáticas disponibles tanto con CSV como con API; 404 significa que no hay demo. */
+export async function cargarRecomendaciones(): Promise<LoteRecomendaciones> {
+  const ruta = `${import.meta.env.BASE_URL}recomendaciones.json`;
+  const respuesta = await fetch(ruta);
+  if (respuesta.status === 404) {
+    return { version: 1, generadoEn: '', umbralesPorValidar: true,
+      aviso: 'Propuesta para el criterio de la educadora. No es un diagnóstico.', items: [] };
+  }
+  if (!respuesta.ok) throw new Error(`No se pudo cargar ${ruta} (${respuesta.status})`);
+  const crudo = await respuesta.json() as Record<string, unknown>;
+  if (crudo.version !== 1 || crudo.umbrales_por_validar !== true || !Array.isArray(crudo.items)) {
+    throw new Error('recomendaciones.json no cumple el contrato público');
+  }
+  return { version: 1, generadoEn: String(crudo.generado_en), umbralesPorValidar: true,
+    aviso: String(crudo.aviso), items: (crudo.items as Record<string, unknown>[]).map(recomendacionDesde) };
 }
 
 export async function cargarDatos(): Promise<Datos> {

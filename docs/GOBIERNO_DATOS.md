@@ -1,5 +1,9 @@
 # Gobierno de datos — IntegrAI
 
+## Demo RAG y clasificación de sus datos
+
+Los 19 PDF OMS/CDC/MINEDUC son fuentes públicas autorizadas y se manifiestan con hash; la licencia queda `por confirmar` cuando no hay declaración redistributiva. El índice extraído permanece en `privado/`. `data/recomendaciones.json` contiene solo IDs y notas sintéticas, citas ≤300 caracteres y estado `por_verificar`; las decisiones de la preview quedan en el navegador y no se confunden con persistencia productiva.
+
 > CDO del proyecto: Mauricio. Revisión: 15-oct-2026. Marco: Ley 19.628 modificada por la **Ley 21.719** (vigente desde el 1-dic-2026), Ley 21.430 (garantías de la niñez), Ley 21.663 (ciberseguridad) y Ley 21.459 (delitos informáticos).
 > Las referencias a artículos se deben verificar en bcn.cl antes de usarlas formalmente.
 

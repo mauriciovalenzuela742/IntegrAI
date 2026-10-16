@@ -1,4 +1,6 @@
 archivo,bytes,sha256,origen,generador,modelo,descripcion
+recomendador/notas_demo.json,1363,6985d7a572080563c891351d4b71cd2d0cfa4d6f27a1010e7c7326b879b77703,notas demo adicionales,edición determinística,-,10 notas explícitamente sintéticas vinculadas a IDs existentes; Emilio no existe en el dataset
+recomendador/casos.json,7461,1a2631375dfa0c694f5c81296703ba81d5a5928bdca7c1e314a8dc7b1fe0feb7,notas_demo.json,edición determinística,-,20 casos para disparos hitos nivel curso e inyección
 casos/casos_aleatorios_30.jsonl,14641,d4df17e2464f48523a3b6a2e79a1441ed81203e2e1bdc4c65c875be028c5ceca,bench/casos.jsonl,bench/guiones.py,Claude Haiku 4.5,30 notas estilo tía desde observaciones del dataset E-1 (estratificadas por nivel)
 casos/casos_contra_edad_60.jsonl,30925,822310cfea36f252eb85db0830bc8b2d5799b5e776853b3f0cd356b64e411b74,bench/casos_contra_edad.jsonl,bench/contra_edad.py,Claude Haiku 4.5,20 reales discordantes + 20 rezagos + 10 adelantos + 10 controles
 casos/casos_rubrica_168.jsonl,60738,ae09fafbd31537d17280ef5401426e5fbcde68407db38f89d39a725a1800a484,bench/casos_rubrica.jsonl,bench/rubrica_casos.py,Claude Haiku 4.5,144 paráfrasis + 24 escenarios nuevos desde la rúbrica de Integra (derivados de material de Integra)

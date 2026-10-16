@@ -1,0 +1,442 @@
+{
+  "$defs": {
+    "Cita": {
+      "additionalProperties": false,
+      "properties": {
+        "fuente_id": {
+          "title": "Fuente Id",
+          "type": "string"
+        },
+        "organizacion": {
+          "title": "Organizacion",
+          "type": "string"
+        },
+        "titulo": {
+          "title": "Titulo",
+          "type": "string"
+        },
+        "pagina_pdf": {
+          "minimum": 1,
+          "title": "Pagina Pdf",
+          "type": "integer"
+        },
+        "fragmento": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Fragmento",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fuente_id",
+        "organizacion",
+        "titulo",
+        "pagina_pdf",
+        "fragmento",
+        "url"
+      ],
+      "title": "Cita",
+      "type": "object"
+    },
+    "Corpus": {
+      "additionalProperties": false,
+      "properties": {
+        "manifiesto_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifiesto Sha256",
+          "type": "string"
+        },
+        "indice_version": {
+          "default": 1,
+          "title": "Indice Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "manifiesto_sha256"
+      ],
+      "title": "Corpus",
+      "type": "object"
+    },
+    "Hallazgo": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^H-\\d+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "tipo": {
+          "enum": [
+            "hito_no_logrado",
+            "hito_sin_registro",
+            "nivel",
+            "curso",
+            "posible_manipulacion"
+          ],
+          "title": "Tipo",
+          "type": "string"
+        },
+        "regla": {
+          "title": "Regla",
+          "type": "string"
+        },
+        "resultado": {
+          "title": "Resultado",
+          "type": "string"
+        },
+        "observacion_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Observacion Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "tipo",
+        "regla",
+        "resultado"
+      ],
+      "title": "Hallazgo",
+      "type": "object"
+    },
+    "HitoAnalizado": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "estado": {
+          "enum": [
+            "logrado",
+            "logrado_inferido",
+            "no_logrado",
+            "en_proceso",
+            "sin_registro"
+          ],
+          "title": "Estado",
+          "type": "string"
+        },
+        "zona": {
+          "enum": [
+            "esperable",
+            "estimular",
+            "atencion",
+            "fuera_de_ventana"
+          ],
+          "title": "Zona",
+          "type": "string"
+        },
+        "edad_meses": {
+          "minimum": 0,
+          "title": "Edad Meses",
+          "type": "number"
+        },
+        "id_observacion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id Observacion"
+        },
+        "cita_observacion": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cita Observacion"
+        },
+        "fecha_observacion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fecha Observacion"
+        }
+      },
+      "required": [
+        "id",
+        "estado",
+        "zona",
+        "edad_meses"
+      ],
+      "title": "HitoAnalizado",
+      "type": "object"
+    },
+    "Modelos": {
+      "additionalProperties": false,
+      "properties": {
+        "extraccion": {
+          "title": "Extraccion",
+          "type": "string"
+        },
+        "redaccion": {
+          "title": "Redaccion",
+          "type": "string"
+        },
+        "embeddings": {
+          "title": "Embeddings",
+          "type": "string"
+        }
+      },
+      "required": [
+        "extraccion",
+        "redaccion",
+        "embeddings"
+      ],
+      "title": "Modelos",
+      "type": "object"
+    },
+    "Procedencia": {
+      "additionalProperties": false,
+      "properties": {
+        "tipo": {
+          "enum": [
+            "plantilla_deterministica",
+            "llm_con_fallback"
+          ],
+          "title": "Tipo",
+          "type": "string"
+        },
+        "modelo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelo"
+        }
+      },
+      "required": [
+        "tipo"
+      ],
+      "title": "Procedencia",
+      "type": "object"
+    },
+    "Recomendacion": {
+      "additionalProperties": false,
+      "properties": {
+        "id_recomendacion": {
+          "pattern": "^REC-\\d{5}$",
+          "title": "Id Recomendacion",
+          "type": "string"
+        },
+        "id_nino": {
+          "title": "Id Nino",
+          "type": "string"
+        },
+        "id_jardin": {
+          "title": "Id Jardin",
+          "type": "string"
+        },
+        "sala_grupo": {
+          "title": "Sala Grupo",
+          "type": "string"
+        },
+        "estado_revision": {
+          "const": "por_verificar",
+          "title": "Estado Revision",
+          "type": "string"
+        },
+        "hito": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HitoAnalizado"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "hallazgos_deterministicos": {
+          "items": {
+            "$ref": "#/$defs/Hallazgo"
+          },
+          "minItems": 1,
+          "title": "Hallazgos Deterministicos",
+          "type": "array"
+        },
+        "resumen": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Resumen",
+          "type": "string"
+        },
+        "sugerencias": {
+          "items": {
+            "$ref": "#/$defs/Sugerencia"
+          },
+          "title": "Sugerencias",
+          "type": "array"
+        },
+        "derivacion_salud": {
+          "title": "Derivacion Salud",
+          "type": "boolean"
+        },
+        "generado_por": {
+          "$ref": "#/$defs/Procedencia"
+        },
+        "validacion": {
+          "$ref": "#/$defs/Validacion"
+        },
+        "aviso": {
+          "const": "Propuesta para el criterio de la educadora. No es un diagnóstico.",
+          "title": "Aviso",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id_recomendacion",
+        "id_nino",
+        "id_jardin",
+        "sala_grupo",
+        "estado_revision",
+        "hallazgos_deterministicos",
+        "resumen",
+        "sugerencias",
+        "derivacion_salud",
+        "generado_por",
+        "validacion",
+        "aviso"
+      ],
+      "title": "Recomendacion",
+      "type": "object"
+    },
+    "Sugerencia": {
+      "additionalProperties": false,
+      "properties": {
+        "texto": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Texto",
+          "type": "string"
+        },
+        "citas": {
+          "items": {
+            "$ref": "#/$defs/Cita"
+          },
+          "minItems": 1,
+          "title": "Citas",
+          "type": "array"
+        }
+      },
+      "required": [
+        "texto",
+        "citas"
+      ],
+      "title": "Sugerencia",
+      "type": "object"
+    },
+    "Validacion": {
+      "additionalProperties": false,
+      "properties": {
+        "citas_literales": {
+          "const": true,
+          "title": "Citas Literales",
+          "type": "boolean"
+        },
+        "numeros_verificados": {
+          "const": true,
+          "title": "Numeros Verificados",
+          "type": "boolean"
+        },
+        "sin_pii": {
+          "const": true,
+          "title": "Sin Pii",
+          "type": "boolean"
+        },
+        "requiere_revision_humana": {
+          "const": true,
+          "title": "Requiere Revision Humana",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "citas_literales",
+        "numeros_verificados",
+        "sin_pii",
+        "requiere_revision_humana"
+      ],
+      "title": "Validacion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "generado_en": {
+      "title": "Generado En",
+      "type": "string"
+    },
+    "modelos": {
+      "$ref": "#/$defs/Modelos"
+    },
+    "corpus": {
+      "$ref": "#/$defs/Corpus"
+    },
+    "umbrales_por_validar": {
+      "const": true,
+      "title": "Umbrales Por Validar",
+      "type": "boolean"
+    },
+    "aviso": {
+      "const": "Propuesta para el criterio de la educadora. No es un diagnóstico.",
+      "title": "Aviso",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/Recomendacion"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "generado_en",
+    "modelos",
+    "corpus",
+    "umbrales_por_validar",
+    "aviso",
+    "items"
+  ],
+  "title": "LoteRecomendaciones",
+  "type": "object"
+}

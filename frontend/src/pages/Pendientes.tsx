@@ -3,6 +3,8 @@ import { useEstadoDatos, useVersionDatos } from '../data/DatosContext';
 import { cargarPendientes, resolverPendiente, usaApi } from '../data/cargar';
 import type { Pendiente } from '../domain/tipos';
 import { Breadcrumbs } from '../components/Breadcrumbs';
+import { TarjetaRecomendacion } from '../components/TarjetaRecomendacion';
+import { useRecomendaciones } from '../data/RecomendacionesContext';
 import { Tabla, type Columna } from '../components/Tabla';
 import { Cargando, ErrorEstado, Vacio } from '../components/Estado';
 
@@ -19,6 +21,8 @@ export function Pendientes() {
   const [carga, setCarga] = useState<EstadoCarga>({ estado: 'cargando' });
   const [accionError, setAccionError] = useState<string | null>(null);
   const [resolviendo, setResolviendo] = useState<string | null>(null);
+  const recomendaciones = useRecomendaciones();
+  const [mensajeRecomendacion, setMensajeRecomendacion] = useState('');
 
   useEffect(() => {
     if (!hayApi) {
@@ -109,7 +113,23 @@ export function Pendientes() {
         Aprobar o editar (por WhatsApp) escribe la evaluación canónica.
       </p>
 
-      {!hayApi && <Vacio mensaje="Esta vista requiere datos vivos del backend (no disponible en modo CSV)." />}
+      <section className="seccion-profesora" aria-labelledby="titulo-recomendaciones">
+        <h3 id="titulo-recomendaciones">Recomendaciones RAG por verificar</h3>
+        <p className="aviso-demo"><strong>Demo estática:</strong> estas decisiones se guardan solo en este navegador y no escriben en producción.</p>
+        <p className="sr-only" aria-live="polite">{mensajeRecomendacion}</p>
+        {recomendaciones.carga.estado === 'cargando' && <Cargando mensaje="Cargando recomendaciones…" />}
+        {recomendaciones.carga.estado === 'error' && <ErrorEstado mensaje={recomendaciones.carga.mensaje} />}
+        {recomendaciones.carga.estado === 'listo' && (recomendaciones.pendientes.length === 0
+          ? <Vacio mensaje="No hay recomendaciones RAG pendientes en este navegador." />
+          : <div className="lista-recomendaciones">{recomendaciones.pendientes.map((item) => (
+              <TarjetaRecomendacion key={item.idRecomendacion} item={item} onDecidir={(decision) => {
+                recomendaciones.decidir(item.idRecomendacion, decision);
+                setMensajeRecomendacion(`${item.idRecomendacion}: decisión guardada.`);
+              }} />
+            ))}</div>)}
+      </section>
+
+      {!hayApi && <p className="ficha-descripcion">La cola de clasificaciones del backend no está disponible en modo CSV.</p>}
       {hayApi && carga.estado === 'cargando' && <Cargando mensaje="Cargando cola…" />}
       {carga.estado === 'error' && <ErrorEstado mensaje={`No se pudo cargar la cola: ${carga.mensaje}`} />}
       {accionError && <ErrorEstado mensaje={accionError} />}

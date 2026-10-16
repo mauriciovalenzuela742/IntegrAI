@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom';
 import { App } from './App';
 import { DatosProvider } from './data/DatosContext';
 import { RevisionProvider } from './data/RevisionContext';
+import { RecomendacionesProvider } from './data/RecomendacionesContext';
 import './estilos.css';
 
 const contenedor = document.getElementById('root');
@@ -16,7 +17,9 @@ createRoot(contenedor).render(
     <HashRouter>
       <DatosProvider>
         <RevisionProvider>
-          <App />
+          <RecomendacionesProvider>
+            <App />
+          </RecomendacionesProvider>
         </RevisionProvider>
       </DatosProvider>
     </HashRouter>

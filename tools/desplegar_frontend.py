@@ -11,7 +11,7 @@ Resultado en la distribución (se ubica por el comentario "IntegrAI", igual que 
     /api/*         → API de lectura (:8000): datos vivos para el dashboard
     /procesar*, /clasificar, /health → API (:8000), sin cambios
 
-Se publican SOLO index.html, assets/ y los 6 CSV que lee frontend/src/data/cargar.ts (datos sintéticos E-1).
+Se publican SOLO index.html, assets/, los 6 CSV sintéticos y recomendaciones.json.
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 REGION = os.getenv("AWS_REGION", "us-east-1")
 COMMENT = os.getenv("INTEGRA_CF_COMMENT", "IntegrAI")
 CSV_USADOS = ["ruta_niveles.csv", "jardines.csv", "ninos.csv", "observaciones.csv",
-              "manifestaciones.csv", "observacion_manifestaciones.csv"]
+              "manifestaciones.csv", "observacion_manifestaciones.csv", "recomendaciones.json"]
 FUNCION_SPA = "integrai-spa-rewrite"
 ORIGEN_S3 = "frontend-s3"
 OAC = "integrai-frontend-oac"

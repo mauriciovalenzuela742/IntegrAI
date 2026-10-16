@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingesta del corpus del recomendador: PDF de privado/rag/fuentes/ -> privado/rag/indice.json.
+"""Ingesta del corpus del recomendador: PDF públicos de RAG/ -> privado/rag/indice.json.
 
 uso:
     python tools/rag_ingestar.py hashes                       # SHA-256 y tamaño de cada PDF (para el manifiesto)
@@ -10,7 +10,7 @@ uso:
 Requiere requirements-rag.txt (pypdf, fonttools). `indexar` sin `--sin-embeddings` necesita Bedrock
 (Titan v2): si un embedding falla, no se escribe un índice a medias.
 
-Los PDF y el índice viven en privado/ (.gitignore): el texto completo de las fuentes no se publica.
+Los PDF públicos viven en RAG/. El índice con texto extraído vive en privado/ (.gitignore) y no se publica.
 Los checklists del CDC (2021) usan fuentes Arial sin tabla ToUnicode: el código de cada carácter es
 el número de glifo de Arial. Se decodifican con la tabla `_GLIFOS_ARIAL`, verificada contra el cmap
 de arial.ttf (4503 glifos) el 15-oct-2026.

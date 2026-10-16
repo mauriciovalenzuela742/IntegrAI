@@ -98,3 +98,39 @@ export interface NotificacionAdvertencia {
   /** Caso original (para poder aprobarlo/editarlo/rechazarlo desde la UI). */
   pendiente: Pendiente;
 }
+
+export interface CitaRecomendacion {
+  fuenteId: string;
+  organizacion: string;
+  titulo: string;
+  paginaPdf: number;
+  fragmento: string;
+  url: string;
+}
+
+export interface Recomendacion {
+  idRecomendacion: string;
+  idNino: string;
+  idJardin: string;
+  salaGrupo: string;
+  estadoRevision: 'por_verificar';
+  hito: { id: string; estado: string; zona: string; edadMeses: number } | null;
+  hallazgosDeterministicos: Array<{ id: string; tipo: string; regla: string; resultado: string; observacionIds: string[] }>;
+  resumen: string;
+  sugerencias: Array<{ texto: string; citas: CitaRecomendacion[] }>;
+  derivacionSalud: boolean;
+  aviso: string;
+}
+
+export interface LoteRecomendaciones {
+  version: 1;
+  generadoEn: string;
+  umbralesPorValidar: true;
+  aviso: string;
+  items: Recomendacion[];
+}
+
+export interface DecisionRecomendacion {
+  estado: 'aprobada' | 'editada' | 'descartada';
+  textoEditado?: string;
+}

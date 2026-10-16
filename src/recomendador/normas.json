@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "revisado": false,
+  "regla_a": "edad_cdc_si_existe_si_no_p75_oms",
+  "hitos": [
+    {"id":"sentarse_sin_apoyo","nombre":"Sentarse sin apoyo","p1":3.8,"p50":5.9,"p75":6.7,"p99":9.2,"edad_cdc":9.0,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":"CDC-09M","equivalencia_cdc":"existente","consultas_es":["sentarse sin apoyo","mantenerse sentado solo","actividades sedestación"],"consultas_en":["sits without support","sitting alone","help baby learn to sit"],"implica":[]},
+    {"id":"de_pie_con_ayuda","nombre":"De pie con ayuda","p1":4.8,"p50":7.4,"p75":8.4,"p99":11.4,"edad_cdc":12.0,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":"CDC-12M","equivalencia_cdc":"dudosa","consultas_es":["ponerse de pie con ayuda","sostenerse de pie con apoyo"],"consultas_en":["standing with assistance","pulls up to stand","holds furniture to stand"],"implica":["sentarse_sin_apoyo"]},
+    {"id":"gatear_manos_rodillas","nombre":"Gatear sobre manos y rodillas","p1":5.2,"p50":8.3,"p75":9.3,"p99":13.5,"edad_cdc":null,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":null,"equivalencia_cdc":"sin_equivalencia","consultas_es":["gatear manos y rodillas","desplazarse gateando"],"consultas_en":["hands and knees crawling","crawling milestone"],"implica":[]},
+    {"id":"caminar_con_ayuda","nombre":"Caminar con ayuda","p1":5.9,"p50":9.0,"p75":10.0,"p99":13.7,"edad_cdc":15.0,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":"CDC-15M","equivalencia_cdc":"dudosa","consultas_es":["caminar con ayuda","dar pasos con apoyo"],"consultas_en":["walking with assistance","takes steps holding furniture"],"implica":["de_pie_con_ayuda","sentarse_sin_apoyo"]},
+    {"id":"de_pie_solo","nombre":"De pie solo","p1":6.9,"p50":10.8,"p75":12.0,"p99":16.9,"edad_cdc":18.0,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":"CDC-18M","equivalencia_cdc":"dudosa","consultas_es":["mantenerse de pie solo","pararse sin apoyo"],"consultas_en":["standing alone","stands without support"],"implica":["de_pie_con_ayuda","sentarse_sin_apoyo"]},
+    {"id":"caminar_solo","nombre":"Caminar solo","p1":8.2,"p50":12.0,"p75":13.1,"p99":17.6,"edad_cdc":18.0,"pagina_oms":1,"fuente_oms":"OMS-PERCENTILES","fuente_cdc":"CDC-18M","equivalencia_cdc":"existente","consultas_es":["caminar solo","marcha independiente"],"consultas_en":["walks without holding on","walking alone","independent walking"],"implica":["de_pie_solo","caminar_con_ayuda","de_pie_con_ayuda","sentarse_sin_apoyo"]}
+  ]
+}

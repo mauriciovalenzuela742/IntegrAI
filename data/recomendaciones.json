@@ -1,0 +1,1179 @@
+{
+  "version": 1,
+  "generado_en": "2026-10-16T04:57:13+00:00",
+  "modelos": {
+    "extraccion": "us.anthropic.claude-sonnet-5",
+    "redaccion": "us.anthropic.claude-sonnet-5",
+    "embeddings": "amazon.titan-embed-text-v2:0"
+  },
+  "corpus": {
+    "manifiesto_sha256": "ad5291214b438454ad6d28294fd70b7a46db4dacc5f6a1e7d4726cdd584d2589",
+    "indice_version": 1
+  },
+  "umbrales_por_validar": true,
+  "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico.",
+  "items": [
+    {
+      "id_recomendacion": "REC-00001",
+      "id_nino": "NINO-00001",
+      "id_jardin": "JAR-0013",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "sentarse_sin_apoyo",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 8.97,
+        "id_observacion": "OBS-DEMO-001",
+        "cita_observacion": "Aún no se sienta sin apoyo durante el juego en el suelo.",
+        "fecha_observacion": "2025-10-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "sentarse_sin_apoyo: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-001"
+          ]
+        },
+        {
+          "id": "H-2",
+          "tipo": "nivel",
+          "regla": "PARIDAD_E1_V1",
+          "resultado": "Escala E-1: nivel vigente 2, esperado 4; brecha -2; fecha 2025-10-01.",
+          "observacion_ids": [
+            "OBS-DEMO-001"
+          ]
+        },
+        {
+          "id": "H-3",
+          "tipo": "curso",
+          "regla": "K_MIN_CURSO_5",
+          "resultado": "Comparación anónima con 5 registros: único sin logro registrado.",
+          "observacion_ids": []
+        }
+      ],
+      "resumen": "La evidencia registra sentarse sin apoyo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con sentarse sin apoyo, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "CDC-09M",
+              "organizacion": "CDC",
+              "titulo": "9 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Sits without support",
+              "url": "https://www.cdc.gov/act-early/milestones/9-months.html"
+            },
+            {
+              "fuente_id": "CDC-03Y",
+              "organizacion": "CDC",
+              "titulo": "3 Year Online Milestone Checklist",
+              "pagina_pdf": 2,
+              "fragmento": "Help your child learn and grow\nAs your child’s first teacher, you can help his or her learning and brain\ndevelopment. Try these simple tips and activities i n a safe way.",
+              "url": "https://www.cdc.gov/act-early/milestones/3-years.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00002",
+      "id_nino": "NINO-00002",
+      "id_jardin": "JAR-0010",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "sentarse_sin_apoyo",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 8.97,
+        "id_observacion": "OBS-DEMO-002",
+        "cita_observacion": "No se mantiene sentado sin apoyo; cae hacia un costado.",
+        "fecha_observacion": "2025-07-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "sentarse_sin_apoyo: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-002"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra sentarse sin apoyo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con sentarse sin apoyo, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "CDC-09M",
+              "organizacion": "CDC",
+              "titulo": "9 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Sits without support",
+              "url": "https://www.cdc.gov/act-early/milestones/9-months.html"
+            },
+            {
+              "fuente_id": "CDC-03Y",
+              "organizacion": "CDC",
+              "titulo": "3 Year Online Milestone Checklist",
+              "pagina_pdf": 2,
+              "fragmento": "Help your child learn and grow\nAs your child’s first teacher, you can help his or her learning and brain\ndevelopment. Try these simple tips and activities i n a safe way.",
+              "url": "https://www.cdc.gov/act-early/milestones/3-years.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00003",
+      "id_nino": "NINO-00003",
+      "id_jardin": "JAR-0014",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": null,
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "posible_manipulacion",
+          "regla": "PREFILTRO_INYECCION_V1",
+          "resultado": "La nota contiene instrucciones ajenas a una observación.",
+          "observacion_ids": [
+            "OBS-DEMO-003"
+          ]
+        }
+      ],
+      "resumen": "La nota se separó para revisión manual porque contiene instrucciones que podrían manipular el procesamiento.",
+      "sugerencias": [],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00004",
+      "id_nino": "NINO-00004",
+      "id_jardin": "JAR-0006",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_con_ayuda",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 12.02,
+        "id_observacion": "OBS-DEMO-004",
+        "cita_observacion": "Aún no camina con ayuda cuando toma la mano de una persona adulta.",
+        "fecha_observacion": "2024-12-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_con_ayuda: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-004"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra caminar con ayuda como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar con ayuda, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 2,
+              "fragmento": "Walking alone Child takes at least five steps independently in u pright position with the back straight.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "CDC-12M",
+              "organizacion": "CDC",
+              "titulo": "12 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Walks, holding on to furniture",
+              "url": "https://www.cdc.gov/act-early/milestones/12-months.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00005",
+      "id_nino": "NINO-00005",
+      "id_jardin": "JAR-0011",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_solo",
+        "estado": "no_logrado",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 18.4,
+        "id_observacion": "OBS-DEMO-005",
+        "cita_observacion": "Todavía no camina solo ni da pasos sin apoyo.",
+        "fecha_observacion": "2026-03-15"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_solo: no_logrado; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-005"
+          ]
+        },
+        {
+          "id": "H-2",
+          "tipo": "nivel",
+          "regla": "PARIDAD_E1_V1",
+          "resultado": "Escala E-1: nivel vigente 4, esperado 7; brecha -3; fecha 2026-03-15.",
+          "observacion_ids": [
+            "OBS-DEMO-005"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra caminar solo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar solo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.8, 9.2 (sitting without support), 4.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 1,
+              "fragmento": "with assistance, walking with assistance, standing alone,\nand walking alone. The information was collected by both",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00006",
+      "id_nino": "NINO-00006",
+      "id_jardin": "JAR-0017",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "de_pie_con_ayuda",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 10.97,
+        "id_observacion": "OBS-DEMO-006",
+        "cita_observacion": "No logra ponerse de pie con ayuda durante la rutina.",
+        "fecha_observacion": "2025-10-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "de_pie_con_ayuda: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-006"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra de pie con ayuda como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con de pie con ayuda, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 3,
+              "fragmento": "stands with assistance for at least 10 seconds.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "CDC-12M",
+              "organizacion": "CDC",
+              "titulo": "12 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Pulls up to stand",
+              "url": "https://www.cdc.gov/act-early/milestones/12-months.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00007",
+      "id_nino": "NINO-00007",
+      "id_jardin": "JAR-0020",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "de_pie_solo",
+        "estado": "no_logrado",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 17.97,
+        "id_observacion": "OBS-DEMO-007",
+        "cita_observacion": "Aún no logra mantenerse de pie solo.",
+        "fecha_observacion": "2026-04-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "de_pie_solo: no_logrado; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-007"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra de pie solo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con de pie solo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-DIFERENCIAS",
+              "organizacion": "OMS",
+              "titulo": "Assessment of sex differences and heterogeneity in motor milestone attainment",
+              "pagina_pdf": 1,
+              "fragmento": "without support, hands-and-knees crawling, standing with assistance, walking with assistance, standing alone, and walking\nalone) were assessed longitudinally in five of the six MGRS sites, namely Ghana, India, Norway, Oman and the USA.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "width; the narrowest is sitting without support (5.4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00008",
+      "id_nino": "NINO-00008",
+      "id_jardin": "JAR-0001",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "gatear_manos_rodillas",
+        "estado": "sin_registro",
+        "zona": "atencion",
+        "edad_meses": 12.98,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "gatear_manos_rodillas: sin_registro; zona atencion; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-008"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar gatear sobre manos y rodillas; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con gatear sobre manos y rodillas, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-DIFERENCIAS",
+              "organizacion": "OMS",
+              "titulo": "Assessment of sex differences and heterogeneity in motor milestone attainment",
+              "pagina_pdf": 1,
+              "fragmento": "without support, hands-and-knees crawling, standing with assistance, walking with assistance, standing alone, and walking\nalone) were assessed longitudinally in five of the six MGRS sites, namely Ghana, India, Norway, Oman and the USA.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "3% did not exhibit hands-and-knees crawling. The six windows have age overlaps but vary in\nwidth; the narrowest is sitting without support (5.4 mo), and the widest are walking alone (9.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00009",
+      "id_nino": "NINO-00009",
+      "id_jardin": "JAR-0017",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_solo",
+        "estado": "no_logrado",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 17.97,
+        "id_observacion": "OBS-DEMO-009",
+        "cita_observacion": "No camina sin apoyo durante los momentos observados.",
+        "fecha_observacion": "2025-05-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_solo: no_logrado; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-009"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra caminar solo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar solo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.8, 9.2 (sitting without support), 4.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 1,
+              "fragmento": "with assistance, walking with assistance, standing alone,\nand walking alone. The information was collected by both",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00010",
+      "id_nino": "NINO-00010",
+      "id_jardin": "JAR-0013",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "sentarse_sin_apoyo",
+        "estado": "sin_registro",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 9.3,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "sentarse_sin_apoyo: sin_registro; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-010"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar sentarse sin apoyo; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con sentarse sin apoyo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "CDC-09M",
+              "organizacion": "CDC",
+              "titulo": "9 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Sits without support",
+              "url": "https://www.cdc.gov/act-early/milestones/9-months.html"
+            },
+            {
+              "fuente_id": "CDC-03Y",
+              "organizacion": "CDC",
+              "titulo": "3 Year Online Milestone Checklist",
+              "pagina_pdf": 2,
+              "fragmento": "Help your child learn and grow\nAs your child’s first teacher, you can help his or her learning and brain\ndevelopment. Try these simple tips and activities i n a safe way.",
+              "url": "https://www.cdc.gov/act-early/milestones/3-years.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00011",
+      "id_nino": "NINO-00001",
+      "id_jardin": "JAR-0013",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "sentarse_sin_apoyo",
+        "estado": "sin_registro",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 9.26,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "sentarse_sin_apoyo: sin_registro; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-011"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar sentarse sin apoyo; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con sentarse sin apoyo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "CDC-09M",
+              "organizacion": "CDC",
+              "titulo": "9 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Sits without support",
+              "url": "https://www.cdc.gov/act-early/milestones/9-months.html"
+            },
+            {
+              "fuente_id": "CDC-03Y",
+              "organizacion": "CDC",
+              "titulo": "3 Year Online Milestone Checklist",
+              "pagina_pdf": 2,
+              "fragmento": "Help your child learn and grow\nAs your child’s first teacher, you can help his or her learning and brain\ndevelopment. Try these simple tips and activities i n a safe way.",
+              "url": "https://www.cdc.gov/act-early/milestones/3-years.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00012",
+      "id_nino": "NINO-00002",
+      "id_jardin": "JAR-0010",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "sentarse_sin_apoyo",
+        "estado": "sin_registro",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 9.26,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "sentarse_sin_apoyo: sin_registro; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-012"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar sentarse sin apoyo; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con sentarse sin apoyo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "CDC-09M",
+              "organizacion": "CDC",
+              "titulo": "9 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Sits without support",
+              "url": "https://www.cdc.gov/act-early/milestones/9-months.html"
+            },
+            {
+              "fuente_id": "CDC-03Y",
+              "organizacion": "CDC",
+              "titulo": "3 Year Online Milestone Checklist",
+              "pagina_pdf": 2,
+              "fragmento": "Help your child learn and grow\nAs your child’s first teacher, you can help his or her learning and brain\ndevelopment. Try these simple tips and activities i n a safe way.",
+              "url": "https://www.cdc.gov/act-early/milestones/3-years.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00013",
+      "id_nino": "NINO-00004",
+      "id_jardin": "JAR-0006",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "gatear_manos_rodillas",
+        "estado": "no_logrado",
+        "zona": "atencion",
+        "edad_meses": 13.04,
+        "id_observacion": "OBS-DEMO-013",
+        "cita_observacion": "Aún no gatea sobre manos y rodillas.",
+        "fecha_observacion": "2025-01-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "gatear_manos_rodillas: no_logrado; zona atencion; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-013"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra gatear sobre manos y rodillas como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con gatear sobre manos y rodillas, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-DIFERENCIAS",
+              "organizacion": "OMS",
+              "titulo": "Assessment of sex differences and heterogeneity in motor milestone attainment",
+              "pagina_pdf": 1,
+              "fragmento": "without support, hands-and-knees crawling, standing with assistance, walking with assistance, standing alone, and walking\nalone) were assessed longitudinally in five of the six MGRS sites, namely Ghana, India, Norway, Oman and the USA.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "3% did not exhibit hands-and-knees crawling. The six windows have age overlaps but vary in\nwidth; the narrowest is sitting without support (5.4 mo), and the widest are walking alone (9.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00014",
+      "id_nino": "NINO-00005",
+      "id_jardin": "JAR-0011",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_con_ayuda",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 12.98,
+        "id_observacion": "OBS-DEMO-014",
+        "cita_observacion": "No camina con ayuda.",
+        "fecha_observacion": "2025-10-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_con_ayuda: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-014"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra caminar con ayuda como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar con ayuda, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 2,
+              "fragmento": "Walking alone Child takes at least five steps independently in u pright position with the back straight.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "CDC-12M",
+              "organizacion": "CDC",
+              "titulo": "12 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Walks, holding on to furniture",
+              "url": "https://www.cdc.gov/act-early/milestones/12-months.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00015",
+      "id_nino": "NINO-00007",
+      "id_jardin": "JAR-0020",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_solo",
+        "estado": "no_logrado",
+        "zona": "estimular",
+        "edad_meses": 14.0,
+        "id_observacion": "OBS-DEMO-016",
+        "cita_observacion": "Todavía no camina solo.",
+        "fecha_observacion": "2025-12-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_solo: no_logrado; zona estimular; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-016"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra caminar solo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar solo, respetando el ritmo individual y registrando los cambios observables.",
+          "citas": [
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.8, 9.2 (sitting without support), 4.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 1,
+              "fragmento": "with assistance, walking with assistance, standing alone,\nand walking alone. The information was collected by both",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00016",
+      "id_nino": "NINO-00008",
+      "id_jardin": "JAR-0001",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_con_ayuda",
+        "estado": "sin_registro",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 14.0,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_con_ayuda: sin_registro; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-017"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar caminar con ayuda; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar con ayuda, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 2,
+              "fragmento": "Walking alone Child takes at least five steps independently in u pright position with the back straight.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "CDC-12M",
+              "organizacion": "CDC",
+              "titulo": "12 Month Online Milestone Checklist",
+              "pagina_pdf": 1,
+              "fragmento": "Walks, holding on to furniture",
+              "url": "https://www.cdc.gov/act-early/milestones/12-months.html"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00017",
+      "id_nino": "NINO-00009",
+      "id_jardin": "JAR-0017",
+      "sala_grupo": "SG-A",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "de_pie_solo",
+        "estado": "no_logrado",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 16.99,
+        "id_observacion": "OBS-DEMO-018",
+        "cita_observacion": "No se mantiene de pie solo.",
+        "fecha_observacion": "2025-04-01"
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_no_logrado",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "de_pie_solo: no_logrado; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-018"
+          ]
+        }
+      ],
+      "resumen": "La evidencia registra de pie solo como no logrado en una zona que aconseja apoyo y seguimiento.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con de pie solo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-DIFERENCIAS",
+              "organizacion": "OMS",
+              "titulo": "Assessment of sex differences and heterogeneity in motor milestone attainment",
+              "pagina_pdf": 1,
+              "fragmento": "without support, hands-and-knees crawling, standing with assistance, walking with assistance, standing alone, and walking\nalone) were assessed longitudinally in five of the six MGRS sites, namely Ghana, India, Norway, Oman and the USA.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "width; the narrowest is sitting without support (5.4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00018",
+      "id_nino": "NINO-00010",
+      "id_jardin": "JAR-0013",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": {
+        "id": "caminar_solo",
+        "estado": "sin_registro",
+        "zona": "fuera_de_ventana",
+        "edad_meses": 17.97,
+        "id_observacion": null,
+        "cita_observacion": null,
+        "fecha_observacion": null
+      },
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "hito_sin_registro",
+          "regla": "DISPARO_HITO_V1",
+          "resultado": "caminar_solo: sin_registro; zona fuera_de_ventana; umbrales por validar.",
+          "observacion_ids": [
+            "OBS-DEMO-019"
+          ]
+        }
+      ],
+      "resumen": "No hay registro suficiente para valorar caminar solo; se propone observarlo en actividades cotidianas.",
+      "sugerencias": [
+        {
+          "texto": "Ofrecer oportunidades de juego seguras y supervisadas relacionadas con caminar solo, respetando el ritmo individual y registrando los cambios observables. Sugerir a la familia conversar con un profesional de salud para una evaluación oportuna.",
+          "citas": [
+            {
+              "fuente_id": "OMS-ESTUDIO-VENTANAS",
+              "organizacion": "OMS",
+              "titulo": "WHO Motor Development Study: windows of achievement for six gross motor milestones",
+              "pagina_pdf": 1,
+              "fragmento": "4 mo), and the widest are walking alone (9.4 mo) and standing alone (10.0\nmo). The estimated 1st and 99th percentiles in months are: 3.8, 9.2 (sitting without support), 4.",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            },
+            {
+              "fuente_id": "OMS-EVALUACION",
+              "organizacion": "OMS",
+              "titulo": "Assessment of gross motor development in the WHO Multicentre Growth Reference Study",
+              "pagina_pdf": 1,
+              "fragmento": "with assistance, walking with assistance, standing alone,\nand walking alone. The information was collected by both",
+              "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones"
+            }
+          ]
+        }
+      ],
+      "derivacion_salud": true,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    },
+    {
+      "id_recomendacion": "REC-00019",
+      "id_nino": "NINO-00003",
+      "id_jardin": "JAR-0014",
+      "sala_grupo": "SG-C",
+      "estado_revision": "por_verificar",
+      "hito": null,
+      "hallazgos_deterministicos": [
+        {
+          "id": "H-1",
+          "tipo": "posible_manipulacion",
+          "regla": "PREFILTRO_INYECCION_V1",
+          "resultado": "La nota contiene instrucciones ajenas a una observación.",
+          "observacion_ids": [
+            "OBS-DEMO-020"
+          ]
+        }
+      ],
+      "resumen": "La nota se separó para revisión manual porque contiene instrucciones que podrían manipular el procesamiento.",
+      "sugerencias": [],
+      "derivacion_salud": false,
+      "generado_por": {
+        "tipo": "plantilla_deterministica",
+        "modelo": null
+      },
+      "validacion": {
+        "citas_literales": true,
+        "numeros_verificados": true,
+        "sin_pii": true,
+        "requiere_revision_humana": true
+      },
+      "aviso": "Propuesta para el criterio de la educadora. No es un diagnóstico."
+    }
+  ]
+}

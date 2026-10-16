@@ -76,21 +76,21 @@ def infra_datos():
         caja(ax, x, y1, W, H, t, l, c, d)
     for i in range(len(fila1) - 1):
         flecha(ax, (fila1[i][0] + W + 0.6, y1 + H / 2), (fila1[i + 1][0] - 0.6, y1 + H / 2))
-    fila2 = [(148, "Clasificador", ["rúbrica Integra: tramo por", "edad · 8 niveles · juez LLM", "+ ensemble · compuerta"], "C", "Sebastián"),
-             (119, "Cola por verificar", ["la tía confirma o corrige", "art. 8 bis: revisión", "humana efectiva"], "C", "Integra"),
-             (90, "BD observaciones", ["seudónimo NINO-xxxxx", "hoy: SQLite en la EC2", "objetivo: cifrada + backup"], "C", "Ivan"),
-             (61, "Dashboards", ["React (/) · Streamlit", "HTTPS ✓ · login pendiente", "objetivo: RBAC por sala"], "C", "Santiago"),
-             (32, "Agregados anónimos", ["por jardín / región", "sin datos individuales", "k-anonimato ≥ 5"], "I", "Integra"),
-             (3, "Datos sintéticos", ["dataset E-1, benchmarks", "únicos en el repo", "público"], "P", "Mauricio")]
+    fila2 = [(148, "Clasificador", ["rúbrica Integra: resultado", "determinístico de entrada", "integración futura"], "C", "Sebastián"),
+             (119, "Análisis determinístico", ["edad · hito · curso", "nivel E-1 con paridad", "sin inferir ausencia"], "C", "Mauricio"),
+             (90, "Recomendador RAG", ["demo por lote, fuera EC2", "citas OMS/CDC/MINEDUC", "→ JSON sintético"], "I", "Mauricio"),
+             (61, "Cola por verificar", ["aprobar · editar · descartar", "estado local de demo", "revisión humana siempre"], "C", "Integra"),
+             (32, "Ficha", ["solo recomendaciones", "aprobadas por educadora", "aviso no diagnóstico"], "C", "Santiago"),
+             (3, "Datos sintéticos", ["dataset E-1 + notas RAG", "únicos datos infantiles", "versionados en repo"], "P", "Mauricio")]
     y2 = 28
     for x, t, l, c, d in fila2:
         caja(ax, x, y2, W, H, t, l, c, d)
     flecha(ax, (148 + W / 2, y1 - 0.6), (148 + W / 2, y2 + H + 0.6), "texto sin nombres")
     for i in range(len(fila2) - 2):
         flecha(ax, (fila2[i][0] - 0.6, y2 + H / 2), (fila2[i + 1][0] + W + 0.6, y2 + H / 2))
-    caja(ax, 61, 6, 54, 14, "Auditoría y derechos", ["log de cada acceso y decisión (2 años, sin PII) · canal ARCO+ (30 días)",
-                                                     "brecha: Agencia sin dilación + apoderados · CSIRT 3 h / 72 h (buena práctica)"], None, "Mauricio")
-    flecha(ax, (90 + W / 2, y2 - 0.6), (95, 20.6), dash=True)
+    caja(ax, 61, 6, 54, 14, "Corpus RAG público → índice local", ["19 PDF OMS · CDC · MINEDUC → ingesta y SHA-256 → índice léxico privado",
+                                                     "índice → análisis determinístico → recomendador → JSON demo; integración backend futura"], None, "Mauricio")
+    flecha(ax, (95, 20.6), (90 + W / 2, y2 - 0.6), "citas ≤ 300", dash=True)
     leyenda_clases(ax, 3, 2.5)
     fig.savefig(OUT / "infra_datos.png", bbox_inches="tight", facecolor=FONDO); plt.close(fig)
 
@@ -110,8 +110,7 @@ def infra_ti():
     caja(ax, 33, 27, 33, 13, "Bedrock", ["Sonnet 5 · Nova · Pegasus · Titan", "sin logging de invocación ✓"], dueno="AWS")
     caja(ax, 3, 5, 31, 17, "GitHub", ["repo público · IDs redactados ✓", "CI: Gitleaks + tests + pip-audit ✓",
                                       "Pages: falta activarlo"], clase="P", dueno="Mauricio")
-    caja(ax, 38, 5, 28, 17, "Secrets Manager", ["integrai/api-token ✓", "token de Meta: pendiente",
-                                                "EBS cifrado por defecto ✓"], dueno="Ivan")
+    caja(ax, 38, 5, 28, 17, "Demo RAG estática", ["19 PDF → ingesta/índice local", "análisis → recomendador", "JSON → cola → ficha", "no corre en EC2"], dueno="Mauricio")
     flecha(ax, (27.6, 72), (32.4, 72))
     flecha(ax, (15, 62.4), (15, 59.6))
     flecha(ax, (27.6, 33), (32.4, 46), "HTTP", color="#B5541A")
