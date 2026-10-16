@@ -103,7 +103,9 @@ export function RevisionProvider({ children }: { children: ReactNode }) {
     }
 
     let activo = true;
-    setEstadoPendientes({ estado: 'cargando' });
+    // Solo la primera carga muestra "Cargando…": los refrescos (SSE/polling) actualizan en silencio,
+    // para que la lista no desaparezca ni la página salte cada vez que llega un aviso del backend.
+    setEstadoPendientes((previo) => (previo.estado === 'listo' ? previo : { estado: 'cargando' }));
     servicioRevision.pendientes(profesora, estadoDatos.datos)
       .then((nuevosPendientes) => {
         if (activo) {
@@ -113,7 +115,7 @@ export function RevisionProvider({ children }: { children: ReactNode }) {
       })
       .catch((error: unknown) => {
         if (activo) {
-          setEstadoPendientes({
+          setEstadoPendientes((previo) => previo.estado === 'listo' ? previo : {
             estado: 'error',
             mensaje: error instanceof Error ? error.message : 'Error desconocido',
           });
