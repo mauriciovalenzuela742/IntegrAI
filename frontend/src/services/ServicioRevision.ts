@@ -77,6 +77,8 @@ function pendienteDesdeApi(valor: unknown, profesora: Profesora, datos: Datos): 
   return {
     idPendiente: valor.id_pendiente,
     idNinoPropuesto: valor.id_nino_propuesto,
+    // "Nombre I." del niño/a: de los datos vivos o, si no está, del propio pendiente
+    nombreVisible: nino?.nombreVisible || texto(valor.nombre_visible) || undefined,
     idEducadora: profesora.idEducadora,
     nivelPropuesto: numeroNullable(valor.nivel_propuesto),
     dominio: valor.dominio ? String(valor.dominio) : null,

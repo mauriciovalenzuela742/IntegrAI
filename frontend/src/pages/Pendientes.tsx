@@ -22,7 +22,9 @@ type EstadoCarga =
 
 export function Pendientes() {
   // Aseguramos que el contexto de datos esté montado (misma app).
-  useEstadoDatos();
+  const estadoDatos = useEstadoDatos();
+  const nombreDe = (idNino: string) => estadoDatos.estado === 'listo'
+    ? estadoDatos.datos.ninos.find((n) => n.idNino === idNino)?.nombreVisible : undefined;
   const version = useVersionDatos();
   const hayApi = usaApi();
   const [carga, setCarga] = useState<EstadoCarga>({ estado: 'cargando' });
@@ -136,7 +138,7 @@ export function Pendientes() {
         {recomendaciones.carga.estado === 'listo' && (recomendaciones.pendientes.length === 0
           ? <Vacio mensaje="No hay recomendaciones RAG pendientes en este navegador." />
           : <div className="lista-recomendaciones">{recomendaciones.pendientes.map((item) => (
-              <TarjetaRecomendacion key={item.idRecomendacion} item={item} onDecidir={(decision) => {
+              <TarjetaRecomendacion key={item.idRecomendacion} item={item} nombre={nombreDe(item.idNino)} onDecidir={(decision) => {
                 recomendaciones.decidir(item.idRecomendacion, decision);
                 setMensajeRecomendacion(`${item.idRecomendacion}: decisión guardada.`);
               }} />

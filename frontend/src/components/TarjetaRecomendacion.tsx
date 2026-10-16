@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DecisionRecomendacion, Recomendacion } from '../domain/tipos';
 
-export function TarjetaRecomendacion({ item, onDecidir }: {
+export function TarjetaRecomendacion({ item, nombre, onDecidir }: {
   item: Recomendacion;
+  /** "Nombre I." del niño/a, si se conoce (datos vivos). */
+  nombre?: string;
   onDecidir?: (decision: DecisionRecomendacion) => void;
 }) {
   const [editando, setEditando] = useState(false);
@@ -12,7 +14,7 @@ export function TarjetaRecomendacion({ item, onDecidir }: {
   return (
     <article className="recomendacion" aria-labelledby={`titulo-${item.idRecomendacion}`}>
       <header className="recomendacion__cabecera">
-        <h4 id={`titulo-${item.idRecomendacion}`}>{item.idNino} · {item.hito?.id.replace(/_/g, ' ') ?? 'revisión de nota'}</h4>
+        <h4 id={`titulo-${item.idRecomendacion}`}>{nombre || item.idNino} · {item.hito?.id.replace(/_/g, ' ') ?? (item.hallazgosDeterministicos.some((h) => h.tipo === 'nivel') ? 'identidad y autonomía' : 'revisión de nota')}</h4>
         <span className="badge-alerta">Por verificar</span>
       </header>
       <p>{item.resumen}</p>

@@ -17,6 +17,8 @@ const HOY = new Date();
 
 export function ProfesoraInicio() {
   const estadoDatos = useEstadoDatos();
+  const nombreDe = (idNino: string) => estadoDatos.estado === 'listo'
+    ? estadoDatos.datos.ninos.find((n) => n.idNino === idNino)?.nombreVisible : undefined;
   const { profesora, modo, notificaciones, estadoPendientes, resolver } = useRevision();
   const [resolviendo, setResolviendo] = useState<string | null>(null);
   const [errorAccion, setErrorAccion] = useState<string | null>(null);
@@ -119,7 +121,7 @@ export function ProfesoraInicio() {
                 <strong> Aprobar</strong>, <strong>Editar</strong> o <strong>Descartar</strong>.
               </p>
               <div className="lista-recomendaciones">{misRecomendaciones.map((item) => (
-                <TarjetaRecomendacion key={item.idRecomendacion} item={item} onDecidir={(decision) => {
+                <TarjetaRecomendacion key={item.idRecomendacion} item={item} nombre={nombreDe(item.idNino)} onDecidir={(decision) => {
                   recomendaciones.decidir(item.idRecomendacion, decision);
                   setMensajeRecomendacion(`${item.idRecomendacion}: decisión guardada.`);
                 }} />
