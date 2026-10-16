@@ -772,3 +772,26 @@ h3 {
 .recomendacion__edicion { display: grid; gap: .5rem; }
 .recomendacion__edicion textarea { min-height: 7rem; width: 100%; padding: .6rem; font: inherit; }
 .recomendacion-ficha + .recomendacion-ficha { border-top: 1px solid var(--color-borde); padding-top: .75rem; }
+
+/* ── Celular (tías usan el teléfono): más aire y objetivos táctiles grandes ── */
+@media (max-width: 640px) {
+  .tabla {
+    font-size: 0.85rem;
+  }
+  .tabla th,
+  .tabla td {
+    padding: 0.5rem 0.6rem;
+  }
+  .tarjeta {
+    padding: 0.85rem;
+  }
+  .advertencia__acciones {
+    gap: 0.4rem;
+  }
+  /* Botones grandes y fáciles de tocar (mín. 44px) */
+  .advertencia__acciones button,
+  .advertencia__acciones input {
+    flex: 1 1 auto;
+    min-height: 2.75rem;
+  }
+}

@@ -16,10 +16,17 @@ export const UMBRAL_REZAGO_RELATIVO = 1.0;
 
 export interface AlumnoCurso {
   idNino: string;
+  /** Etiqueta legible del backend ("Emilia Co."); si falta, la UI cae al código. */
+  nombreVisible?: string;
   edadMeses: number;
   nivelVigente: number | null;
   nivelEsperado: number | null;
   brecha: number | null;
+  /** Texto rubric-aware entregado por la evaluación consolidada del backend. */
+  alertaRubrica: string | null;
+  /** Señal etaria calculada con la brecha y el umbral existentes. */
+  alertaEdad: boolean;
+  /** Agregado compatible: rúbrica, edad o rezago relativo. */
   alerta: boolean;
   /** Rezagado RELATIVO a su sala (no a un estándar absoluto). */
   rezagoRelativo: boolean;
@@ -73,27 +80,29 @@ export function alumnoDesde(
   evaluacion?: Evaluacion,
 ): AlumnoCurso {
   const meses = edadMeses(nino.fechaNacimiento, hoy);
-  // Si hay evaluación consolidada del backend, esa manda (nivel + alerta rubric-aware).
   const vigente = evaluacion ? evaluacion.nivel : nivelVigente(observaciones);
   const esperado = nivelEsperado(meses, niveles);
   const valorBrecha = brecha(vigente, esperado);
-  const alerta = evaluacion
-    ? (evaluacion.alerta ?? '').trim() !== ''
-    : tieneAlerta(valorBrecha);
+  const textoRubrica = evaluacion?.alerta?.trim() ?? '';
+  const alertaRubrica = textoRubrica || null;
+  const alertaEdad = tieneAlerta(valorBrecha);
   return {
     idNino: nino.idNino,
+    nombreVisible: nino.nombreVisible ?? '',
     edadMeses: meses,
     nivelVigente: vigente,
     nivelEsperado: esperado,
     brecha: valorBrecha,
-    alerta,
+    alertaRubrica,
+    alertaEdad,
+    alerta: alertaRubrica !== null || alertaEdad,
     rezagoRelativo: false,
     ajustadoManual: evaluacion ? (evaluacion.origen ?? '').startsWith('manual') : false,
   };
 }
 
 /** Marca el rezago RELATIVO de un grupo-curso: compara cada niño/a con el promedio
- *  de SU sala y suma ese rezago al flag de alerta. */
+ *  de SU sala y suma ese rezago al flag agregado de atención. */
 function conRezagoRelativo(alumnos: AlumnoCurso[]): AlumnoCurso[] {
   const niveles = alumnos
     .map((a) => a.nivelVigente)
@@ -191,6 +200,8 @@ export interface FichaNino {
   nivelVigente: number | null;
   nivelEsperado: number | null;
   brecha: number | null;
+  alertaRubrica: string | null;
+  alertaEdad: boolean;
   alerta: boolean;
   rezagoRelativo: boolean;
   ajustadoManual: boolean;
@@ -247,6 +258,8 @@ export function fichaNino(
     nivelVigente: alumno.nivelVigente,
     nivelEsperado: alumno.nivelEsperado,
     brecha: alumno.brecha,
+    alertaRubrica: alumno.alertaRubrica,
+    alertaEdad: alumno.alertaEdad,
     alerta: alumno.alerta,
     rezagoRelativo: alumno.rezagoRelativo,
     ajustadoManual: alumno.ajustadoManual,

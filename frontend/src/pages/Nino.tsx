@@ -101,7 +101,7 @@ export function Nino() {
           ...(autorizado && idJardin && sala
             ? [{ etiqueta: `${idJardin} · ${sala}`, ruta: `/curso/${idJardin}/${sala}` }]
             : []),
-          { etiqueta: idNino },
+          { etiqueta: nino?.nombreVisible || idNino },
         ]}
       />
 
@@ -116,7 +116,7 @@ export function Nino() {
 
       {estado.estado === 'listo' && autorizado && vista && (
         <>
-          <h2>{vista.ficha.nino.idNino}</h2>
+          <h2>{vista.ficha.nino.nombreVisible || idNino}</h2>
 
           <section aria-label="Resumen del niño/a" className="tarjetas">
             <Tarjeta etiqueta="Edad (meses)" valor={String(vista.ficha.edadMeses)} />

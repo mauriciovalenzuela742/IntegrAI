@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   asignarProfesorasDemo,
+  datosDeProfesora,
   filtrarCursosDeProfesora,
   normalizarTelefono,
   telefonoDemo,
@@ -95,4 +96,45 @@ describe('acceso por curso', () => {
     expect(tieneAccesoNino(profesora, nino('N-1', 'JAR-1', 'Sala A'))).toBe(true);
     expect(tieneAccesoNino(profesora, nino('N-2', 'JAR-2', 'Sala A'))).toBe(false);
   });
+});
+
+
+it('proyecta todos los datos relacionados antes de calcular métricas de profesora', () => {
+  const profesora: Profesora = {
+    idEducadora: 'EDU-1',
+    telefono: '56900000001',
+    cursos: [{ idJardin: 'J1', salaGrupo: 'A' }],
+  };
+  const datos = {
+    educadoras: [
+      { idEducadora: 'EDU-1', idJardin: 'J1', rol: 'educadora', aniosExperiencia: 1 },
+      { idEducadora: 'EDU-2', idJardin: 'J2', rol: 'educadora', aniosExperiencia: 1 },
+    ],
+    niveles: [],
+    jardines: [
+      { idJardin: 'J1', nombreFantasia: 'Uno', comuna: '', region: '' },
+      { idJardin: 'J2', nombreFantasia: 'Dos', comuna: '', region: '' },
+    ],
+    ninos: [nino('N1', 'J1', 'A'), nino('N2', 'J1', 'B'), nino('N3', 'J2', 'A')],
+    observaciones: [
+      { idObservacion: 'O1', idNino: 'N1', fechaObservacion: '', formatoCaptura: 'texto', nivelEstimado: 2 },
+      { idObservacion: 'O2', idNino: 'N2', fechaObservacion: '', formatoCaptura: 'texto', nivelEstimado: 3 },
+    ],
+    manifestaciones: [],
+    observacionManifestaciones: [
+      { idObservacion: 'O1', idManifestacion: 'M1' },
+      { idObservacion: 'O2', idManifestacion: 'M2' },
+    ],
+    evaluaciones: [
+      { idNino: 'N1', dominio: 'global', nivel: 2, margen: 1, periodo: '', tendencia: '', alerta: null },
+      { idNino: 'N2', dominio: 'global', nivel: 3, margen: 1, periodo: '', tendencia: '', alerta: null },
+    ],
+  };
+
+  const resultado = datosDeProfesora(datos, profesora);
+  expect(resultado.ninos.map((actual) => actual.idNino)).toEqual(['N1']);
+  expect(resultado.observaciones.map((actual) => actual.idObservacion)).toEqual(['O1']);
+  expect(resultado.observacionManifestaciones).toEqual([{ idObservacion: 'O1', idManifestacion: 'M1' }]);
+  expect(resultado.evaluaciones?.map((actual) => actual.idNino)).toEqual(['N1']);
+  expect(resultado.jardines.map((actual) => actual.idJardin)).toEqual(['J1']);
 });

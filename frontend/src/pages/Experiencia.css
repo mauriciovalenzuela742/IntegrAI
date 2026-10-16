@@ -1,0 +1,237 @@
+.experiencia {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.experiencia__encabezado,
+.experiencia__ficha-cabecera,
+.experiencia__acciones {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.experiencia__encabezado h2,
+.experiencia__ficha h3,
+.experiencia__ficha h4,
+.experiencia__figura,
+.experiencia__focos p {
+  margin-top: 0;
+}
+
+.experiencia__sobrelinea {
+  margin: 0 0 0.2rem;
+  color: var(--color-acento);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.experiencia__introduccion,
+.experiencia__texto-tenue,
+.experiencia__aclaracion {
+  color: var(--color-texto-tenue);
+}
+
+.experiencia__aclaracion {
+  font-size: 0.85rem;
+}
+
+.experiencia__filtros {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.experiencia__campo label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.experiencia__campo select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font: inherit;
+}
+
+.experiencia__ficha {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  box-shadow: var(--sombra);
+}
+
+.experiencia__ficha-cabecera p {
+  margin: 0;
+  color: var(--color-texto-tenue);
+}
+
+.experiencia__lectura {
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--color-acento);
+  border-radius: 0 var(--radio) var(--radio) 0;
+  background: var(--color-acento-suave);
+}
+
+.experiencia__lectura h4,
+.experiencia__lectura p {
+  margin-bottom: 0;
+}
+
+.experiencia__lectura--atencion {
+  border-color: var(--color-alerta);
+  background: var(--color-alerta-fondo);
+}
+
+.experiencia__metricas-ficha {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.experiencia__metricas-ficha div {
+  padding: 0.75rem;
+  border-radius: var(--radio);
+  background: var(--color-fondo);
+}
+
+.experiencia__metricas-ficha dt {
+  color: var(--color-texto-tenue);
+  font-size: 0.8rem;
+}
+
+.experiencia__metricas-ficha dd {
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+}
+
+.experiencia__causas,
+.experiencia__focos,
+.experiencia__manifestaciones {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.experiencia__causa {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-left: 4px solid var(--color-alerta);
+  border-radius: var(--radio);
+}
+
+.experiencia__causa--rubrica { border-left-color: #7c3aed; }
+.experiencia__causa--sala { border-left-color: var(--color-acento); }
+
+.experiencia__dos-columnas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.experiencia__figura {
+  min-width: 0;
+  margin-bottom: 1rem;
+}
+
+.experiencia__figura figcaption {
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.experiencia__grafico {
+  width: 100%;
+  min-width: 0;
+}
+
+.experiencia__datos-grafico summary {
+  min-height: 44px;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.experiencia__datos-grafico table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.experiencia__datos-grafico th,
+.experiencia__datos-grafico td {
+  padding: 0.4rem;
+  border-bottom: 1px solid var(--color-borde);
+  text-align: left;
+}
+
+.experiencia__focos > li,
+.experiencia__manifestaciones li {
+  padding: 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.experiencia__focos ul {
+  padding-left: 1.1rem;
+}
+
+.experiencia__focos li li {
+  margin-top: 0.4rem;
+}
+
+.experiencia__trayectoria-texto {
+  margin-bottom: 0;
+  columns: 2;
+}
+
+.experiencia .boton {
+  min-height: 44px;
+}
+
+@media (max-width: 760px) {
+  .experiencia__dos-columnas,
+  .experiencia__metricas-ficha {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .experiencia__trayectoria-texto {
+    columns: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .experiencia__filtros {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .experiencia__encabezado .boton,
+  .experiencia__ficha-cabecera .boton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.experiencia__mas-evidencia summary {
+  min-height: 44px;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  font-weight: 700;
+}

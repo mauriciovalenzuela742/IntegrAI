@@ -33,22 +33,22 @@ describe('notificaciones de advertencia', () => {
     expect(notificacion).toEqual({
       idNotificacion: 'P-1',
       tipo: 'advertencia',
-      titulo: 'Revisar a NINO-X: clasificación bajo el umbral',
-      detalle: 'El modelo propuso el nivel 3 con margen 0,08 (umbral 0,15)',
+      titulo: 'Confirma a NINO-X',
+      detalle: 'El sistema propuso el nivel 3 y quedó por confirmar.',
       fecha: '2026-02-03T10:00:00',
       href: '/nino/NINO-X',
       pendiente: caso,
     });
   });
 
-  it('solo crea advertencias bajo el umbral', () => {
+  it('crea una advertencia por CADA pendiente (ya no filtra por margen)', () => {
     const notificaciones = notificacionesDesdePendientes([
       pendiente('baja', 'N-1', 0.149, '2026-01-01'),
       pendiente('igual', 'N-2', 0.15, '2026-01-02'),
       pendiente('alta', 'N-3', 0.4, '2026-01-03'),
       pendiente('sin-margen', 'N-4', null, '2026-01-04'),
     ]);
-    expect(notificaciones.map((n) => n.idNotificacion)).toEqual(['baja']);
+    expect(notificaciones.map((n) => n.idNotificacion)).toEqual(['sin-margen', 'alta', 'igual', 'baja']);
   });
 
   it('ordena de nueva a antigua y conserva el orden en empates', () => {

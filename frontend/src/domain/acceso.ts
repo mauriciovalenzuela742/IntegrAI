@@ -1,3 +1,4 @@
+import type { Datos } from '../data/cargar';
 import { claveCurso } from './consultas';
 import type { CursoProfesora, Educadora, Nino, Profesora } from './tipos';
 
@@ -79,4 +80,30 @@ export function tieneAccesoCurso(
 
 export function tieneAccesoNino(profesora: Profesora, nino: Nino): boolean {
   return tieneAccesoCurso(profesora, nino.idJardin, nino.salaGrupo);
+}
+
+
+/** Proyecta los datos antes de calcular métricas para evitar agregaciones fuera del alcance. */
+export function datosDeProfesora(datos: Datos, profesora: Profesora): Datos {
+  const cursos = new Set(
+    profesora.cursos.map((curso) => claveCurso(curso.idJardin, curso.salaGrupo)),
+  );
+  const ninos = datos.ninos.filter((nino) =>
+    cursos.has(claveCurso(nino.idJardin, nino.salaGrupo)),
+  );
+  const idsNinos = new Set(ninos.map((nino) => nino.idNino));
+  const observaciones = datos.observaciones.filter((obs) => idsNinos.has(obs.idNino));
+  const idsObservaciones = new Set(observaciones.map((obs) => obs.idObservacion));
+  const idsJardines = new Set(ninos.map((nino) => nino.idJardin));
+  return {
+    ...datos,
+    educadoras: datos.educadoras.filter((educadora) => educadora.idEducadora === profesora.idEducadora),
+    jardines: datos.jardines.filter((jardin) => idsJardines.has(jardin.idJardin)),
+    ninos,
+    observaciones,
+    observacionManifestaciones: datos.observacionManifestaciones.filter((relacion) =>
+      idsObservaciones.has(relacion.idObservacion),
+    ),
+    evaluaciones: (datos.evaluaciones ?? []).filter((evaluacion) => idsNinos.has(evaluacion.idNino)),
+  };
 }

@@ -45,33 +45,40 @@ export function ProfesoraInicio() {
 
       {modo === 'demo' && (
         <p className="aviso-demo" role="status">
-          <strong>Modo demostración</strong>: los márgenes bajo el umbral son simulados.
+          <strong>Modo demostración</strong>: datos de prueba.
         </p>
       )}
 
       <section aria-label="Resumen de profesora" className="tarjetas">
         <Tarjeta etiqueta="Mis cursos" valor={String(cursos.length)} />
         <Tarjeta
-          etiqueta="Casos por revisar"
+          etiqueta="Por confirmar"
           valor={String(notificaciones.length)}
           alerta={notificaciones.length > 0}
         />
       </section>
 
+      <p className="profesora-ayuda">
+        <Link className="boton boton--secundario" to="/profesora/experiencia">
+          Ver acompañamiento pedagógico
+        </Link>
+      </p>
+
       <section id="advertencias" className="seccion-profesora" aria-labelledby="titulo-advertencias">
-        <h3 id="titulo-advertencias">Advertencias</h3>
+        <h3 id="titulo-advertencias">Por confirmar</h3>
         {estadoPendientes.estado === 'cargando' && <Cargando mensaje="Cargando advertencias…" />}
         {estadoPendientes.estado === 'error' && (
           <ErrorEstado mensaje={`No se pudieron cargar las advertencias: ${estadoPendientes.mensaje}`} />
         )}
         {estadoPendientes.estado === 'listo' && (
           notificaciones.length === 0 ? (
-            <Vacio mensaje="No hay casos por revisar." />
+            <Vacio mensaje="¡Todo al día! No tienes casos por confirmar." />
           ) : (
             <>
               <p className="profesora-ayuda">
-                Revisa la evidencia y <strong>confirma el nivel</strong> (aprobar), <strong>corrígelo</strong> (editar)
-                o <strong>rechaza</strong> el caso.
+                Estas observaciones quedaron <strong>por confirmar</strong>. Mira lo que se observó y
+                elige: <strong>Está bien</strong>, <strong>Cambiar nivel</strong> o
+                <strong>No es este niño/a</strong>.
               </p>
               {errorAccion && <ErrorEstado mensaje={errorAccion} />}
               <ListaAdvertencias

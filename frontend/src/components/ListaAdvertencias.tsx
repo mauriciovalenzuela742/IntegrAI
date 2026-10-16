@@ -24,7 +24,7 @@ export function ListaAdvertencias({ notificaciones, onResolver, resolviendoId }:
         return (
           <li key={notificacion.idNotificacion} className="advertencia">
             <span className="advertencia__icono" aria-hidden="true">!</span>
-            <span className="sr-only">Advertencia</span>
+            <span className="sr-only">Caso por confirmar</span>
             <div className="advertencia__contenido">
               <p className="advertencia__titulo">{notificacion.titulo}</p>
               <p className="advertencia__detalle">{notificacion.detalle}</p>
@@ -37,7 +37,7 @@ export function ListaAdvertencias({ notificaciones, onResolver, resolviendoId }:
                 <div className="advertencia__acciones" role="group" aria-label="Verificar caso">
                   <button type="button" disabled={ocupado}
                           onClick={() => onResolver(notificacion.idNotificacion, 'aprobado')}>
-                    ✓ Aprobar nivel {pendiente.nivelPropuesto ?? '—'}
+                    ✓ Está bien (nivel {pendiente.nivelPropuesto ?? '—'})
                   </button>
                   {editando === notificacion.idNotificacion ? (
                     <>
@@ -56,19 +56,19 @@ export function ListaAdvertencias({ notificaciones, onResolver, resolviendoId }:
                                   setEditando(null);
                                 }
                               }}>
-                        Guardar nivel
+                        Guardar
                       </button>
                       <button type="button" onClick={() => setEditando(null)}>Cancelar</button>
                     </>
                   ) : (
                     <button type="button" disabled={ocupado}
                             onClick={() => setEditando(notificacion.idNotificacion)}>
-                      ✏️ Editar nivel
+                      ✏️ Cambiar nivel
                     </button>
                   )}
                   <button type="button" disabled={ocupado}
                           onClick={() => onResolver(notificacion.idNotificacion, 'rechazado')}>
-                    🚫 Rechazar
+                    🚫 No es este niño/a
                   </button>
                   {ocupado && <span className="advertencia__ocupado" role="status">guardando…</span>}
                 </div>

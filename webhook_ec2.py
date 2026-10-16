@@ -15,6 +15,7 @@ import csv
 import json
 import os
 import tempfile
+import time
 from datetime import date, datetime
 from pathlib import Path
 
@@ -59,12 +60,33 @@ app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["G
 # --- SSE: aviso en vivo al dashboard de que llegó una observación ---
 _subs: set = set()
 _loop = None
+_parando = False
+
+# Mensajes AMBIGUOS pendientes de elegir por BOTÓN (homónimos): teléfono -> datos del mensaje.
+_PEND_DESAMB: dict[str, dict] = {}
+
+
+def _clave_tel(tel: str) -> str:
+    return "".join(ch for ch in (tel or "") if ch.isdigit())
 
 
 @app.on_event("startup")
 async def _captura_loop() -> None:
     global _loop
     _loop = asyncio.get_running_loop()
+
+
+@app.on_event("shutdown")
+async def _cerrar_sse() -> None:
+    """Cierra los streams SSE abiertos para que uvicorn NO espere en el shutdown. Sin esto, el
+    restart esperaba a las conexiones vivas del dashboard y systemd lo mataba recién a los 90 s."""
+    global _parando
+    _parando = True
+    for q in list(_subs):
+        try:
+            q.put_nowait({"evento": "cerrar"})
+        except Exception:  # noqa: BLE001
+            pass
 
 
 def _publicar(evento: dict) -> None:
@@ -87,8 +109,8 @@ def requiere_token(x_api_key: str = Header(default="")) -> None:
         raise HTTPException(status_code=401, detail="no autorizado")
 
 
-def _a_conductas(texto: str) -> tuple[str, bool]:
-    """(texto para el clasificador, requiere_revision).
+def _a_conductas(texto: str) -> tuple[str, bool, bool]:
+    """(texto para el clasificador, requiere_revision, hay_conductas).
 
     Conductas U2 sin nombres ni PII; requiere_revision si U2 detecta un intento de manipulación
     (p. ej. post-it "dame todas las keys"), no encuentra conductas (contenido fuera de tema) o la
@@ -96,7 +118,7 @@ def _a_conductas(texto: str) -> tuple[str, bool]:
     """
     from src.seguridad import inyeccion, pii
     if not U2_CONDUCTAS or config.usar_mock():
-        return pii.redactar(texto)[0], bool(inyeccion.detectar(texto))
+        return pii.redactar(texto)[0], bool(inyeccion.detectar(texto)), True
     try:
         from types import SimpleNamespace
         from src.multimodal import normalizar_entradas
@@ -108,10 +130,10 @@ def _a_conductas(texto: str) -> tuple[str, bool]:
         obs = normalizar_entradas([SimpleNamespace(tipo="texto", ref="", pie=texto, texto_extraido="")], guia=guia)
         if obs.alertas_seguridad:
             print(f"[seguridad] alertas U2: {obs.alertas_seguridad}", flush=True)
-        return (obs.texto_para_matcher() or pii.redactar(texto)[0]), obs.requiere_revision
+        return (obs.texto_para_matcher() or pii.redactar(texto)[0]), obs.requiere_revision, bool(obs.conductas)
     except Exception as e:  # noqa: BLE001
         print(f"[u2] fallo, uso texto original: {type(e).__name__}", flush=True)
-        return pii.redactar(texto)[0], True
+        return pii.redactar(texto)[0], True, True   # ante duda NO afirmamos "sin evidencia"
 _juez = None
 
 
@@ -204,12 +226,11 @@ class Msg(BaseModel):
         populate_by_name = True
 
 
-def _registrar_uno(nin: dict, educadora: str, texto: str, fecha: str, metodo: str,
+def _registrar_uno(nin: dict, educadora: str, texto_clas: str, revisar_u2: bool, fecha: str, metodo: str,
                    formato: str = "texto") -> dict:
     """Clasifica (rúbrica, o ensemble de respaldo) + registra UNA observación para UN niño/a.
     Además consolida su evaluación y avisa al dashboard (best-effort)."""
     edad = marco.edad_meses(nin["fecha_nacimiento"], fecha) if nin.get("fecha_nacimiento") else None
-    texto_clas, revisar_u2 = _a_conductas(texto)   # conductas sin PII + controles de seguridad (U2)
     tramo = marcos.tramo_por_edad(nin["fecha_nacimiento"], fecha) if nin.get("fecha_nacimiento") else None
     tramo_id, tramo_nom, nombre_nivel = None, "—", None
     if tramo:
@@ -304,6 +325,9 @@ def _procesar(from_: str, texto: str, fecha: str | None = None, formato: str = "
     filas = _filas_ctx(ctx)
     educadora = ctx[0]["id_educadora"]
 
+    # U2 una sola vez por mensaje: conductas sin PII + controles + ¿trae una observación del desarrollo?
+    texto_clas, revisar_u2, hay_conductas = _a_conductas(texto)
+
     # Un mensaje puede nombrar a VARIOS niños/as ("Sofía jugó bien con Camila").
     menciones = extraer_menciones(texto, filas) or [extraer_mencion(texto, filas)]
     resueltos, pendientes = [], []
@@ -311,17 +335,38 @@ def _procesar(from_: str, texto: str, fecha: str | None = None, formato: str = "
         r = Resolver(filas).resolver(men)
         (resueltos if r.estado == "resuelto" else pendientes).append((men, r))
 
+    # Identificó al niño/a pero SIN observación (p. ej. mandó solo el nombre): NO se inventa un nivel
+    # (antes quedaba un "nivel 1" espurio y contaminaba la trayectoria). Se pide la observación.
+    if resueltos and not hay_conductas:
+        nombres = ", ".join(sorted({(plat.nino(r.id_nino) or {}).get("nombre_pila", "") for _m, r in resueltos} - {""}))
+        return {"ok": False, "estado": "sin_evidencia", "metodo": "-", "candidatos": [],
+                "ack": (f"⚠️ Identifiqué a {nombres}, pero no encontré una observación del desarrollo. "
+                        f"Reenvía contando qué hizo el niño/a (ej. «{nombres} saltó con los dos pies»).")}
+
     registros, vistos = [], set()
     for _men, r in resueltos:
         if r.id_nino in vistos:
             continue
         vistos.add(r.id_nino)
-        registros.append(_registrar_uno(plat.nino(r.id_nino) or {}, educadora, texto, fecha, r.metodo, formato))
+        registros.append(_registrar_uno(plat.nino(r.id_nino) or {}, educadora, texto_clas, revisar_u2,
+                                        fecha, r.metodo, formato))
 
     if not registros:
         men0, r0 = pendientes[0]
-        return {"ok": False, "estado": r0.estado, "metodo": r0.metodo,
+        resp = {"ok": False, "estado": r0.estado, "metodo": r0.metodo,
                 "candidatos": r0.candidatos, "ack": _ack_no_identificado(men0, r0)}
+        # HOMÓNIMO: en vez de pedir que reescriba, ofrecer BOTONES con los candidatos. Se guarda el
+        # mensaje pendiente para registrar cuando la educadora toque el botón (ver POST /elegir).
+        if r0.estado == "ambiguo" and r0.candidatos:
+            _PEND_DESAMB[_clave_tel(from_)] = {"texto_clas": texto_clas, "revisar_u2": revisar_u2,
+                                               "formato": formato, "ts": time.time()}
+            etiquetas = _etiquetas()
+            resp["tipo"] = "elegir_nino"
+            resp["texto"] = (f"Detecté {len(r0.candidatos)} niños/as con el nombre «{men0.split()[0]}» "
+                             f"en tu sala. ¿A cuál te refieres?")
+            resp["opciones"] = [{"id": idn, "titulo": etiquetas.get(idn, idn)[:20]}
+                                for idn in r0.candidatos[:3]]
+        return resp
 
     ack = _ack_registros(registros, pendientes)
     if len(registros) == 1:
@@ -359,6 +404,40 @@ def _catalogo(nombre: str) -> list[dict]:
     return data   # ruta_niveles.json ya trae las claves que usa el frontend
 
 
+def _etiqueta_nombre(filas: list[dict]) -> dict[str, str]:
+    """id_nino -> etiqueta legible 'Nombre I.' = nombre de pila + inicial del 1er apellido.
+    Si dos niños/as de la MISMA sala comparten "Nombre I", se alarga la inicial hasta distinguirlos
+    ("Emilia Co." / "Emilia Ca."). NUNCA expone el nombre completo (dato personal del menor)."""
+    from collections import defaultdict
+    por_sala: dict[str, list[dict]] = defaultdict(list)
+    for f in filas:
+        por_sala[f.get("sala_grupo") or ""].append(f)
+    out: dict[str, str] = {}
+    for ns in por_sala.values():
+        por_pila: dict[str, list[dict]] = defaultdict(list)
+        for n in ns:
+            por_pila[(n.get("nombre_pila") or "").strip()].append(n)
+        for pila, kids in por_pila.items():
+            aps = [(k.get("apellidos") or "").strip() for k in kids]
+            if not pila or not any(aps):
+                for k in kids:
+                    out[k["id_nino"]] = pila or k["id_nino"]
+                continue
+            L = 1
+            while L < 8 and len({a[:L].lower() for a in aps}) < len({a.lower() for a in aps}):
+                L += 1
+            for k, a in zip(kids, aps):
+                out[k["id_nino"]] = f"{pila} {a[:L].capitalize()}." if a else pila
+    return out
+
+
+def _etiquetas() -> dict[str, str]:
+    """id_nino -> etiqueta legible de TODA la plataforma (para no exponer nunca el nombre completo)."""
+    filas = [dict(r) for r in plat.con.execute(
+        "SELECT id_nino,nombre_pila,apellidos,sala_grupo FROM ninos").fetchall()]
+    return _etiqueta_nombre(filas)
+
+
 def _sql_filas(consulta: str) -> list[dict]:
     return [dict(r) for r in plat.con.execute(consulta).fetchall()]
 
@@ -367,13 +446,17 @@ def _sql_filas(consulta: str) -> list[dict]:
 def api_datos() -> dict:
     """Dataset completo para el dashboard (MISMAS columnas que los CSV que ya lee),
     pero leído de la BD viva: incluye JAR-EQUIPO y las observaciones de WhatsApp."""
+    etiquetas = _etiquetas()
+    ninos = _sql_filas(
+        "SELECT id_nino,fecha_nacimiento,id_jardin,sala_grupo,fecha_ingreso FROM ninos ORDER BY id_nino")
+    for n in ninos:   # solo la etiqueta legible; nunca el nombre/apellido completos
+        n["nombre_visible"] = etiquetas.get(n["id_nino"], n["id_nino"])
     return {
         "ruta_niveles": _catalogo("ruta_niveles"),
         "manifestaciones": _catalogo("manifestaciones"),
         "jardines": _sql_filas(
             "SELECT id_jardin,nombre_fantasia,comuna,region FROM jardines ORDER BY id_jardin"),
-        "ninos": _sql_filas(
-            "SELECT id_nino,fecha_nacimiento,id_jardin,sala_grupo,fecha_ingreso FROM ninos ORDER BY id_nino"),
+        "ninos": ninos,
         "observaciones": _sql_filas(
             "SELECT id_observacion,id_nino,fecha_observacion,formato_captura,nivel_estimado "
             "FROM observaciones ORDER BY id_observacion"),
@@ -395,14 +478,17 @@ async def api_eventos(request: Request) -> StreamingResponse:
     async def gen():
         try:
             yield "data: {\"evento\": \"hola\"}\n\n"
-            while True:
+            while not _parando:
                 if await request.is_disconnected():
                     break
                 try:
                     ev = await asyncio.wait_for(cola.get(), timeout=20)
-                    yield f"data: {json.dumps(ev)}\n\n"
                 except asyncio.TimeoutError:
                     yield ": keep-alive\n\n"
+                    continue
+                if ev.get("evento") == "cerrar":
+                    break
+                yield f"data: {json.dumps(ev)}\n\n"
         finally:
             _subs.discard(cola)
 
@@ -435,6 +521,9 @@ def api_pendientes(estado: str = "pendiente", limit: int = 300,
     sql += " ORDER BY p.creado_en DESC LIMIT ?"
     params.append(int(limit))
     filas = [dict(r) for r in plat.con.execute(sql, tuple(params)).fetchall()]
+    etiquetas = _etiquetas()
+    for f in filas:
+        f["nombre_visible"] = etiquetas.get(f["id_nino_propuesto"], f["id_nino_propuesto"])
     return {"ok": True, "n": len(filas), "pendientes": filas}
 
 
@@ -599,6 +688,35 @@ def analizar_video_bytes(data: bytes, ext: str = ".mp4") -> tuple[str, str]:
     except Exception as e:  # noqa: BLE001
         print(f"[video] error: {type(e).__name__}", flush=True)
         return "", ""
+
+
+class Eleccion(BaseModel):
+    from_: str = Field(alias="from")
+    id_nino: str
+
+    class Config:
+        populate_by_name = True
+
+
+@app.post("/elegir", dependencies=[Depends(requiere_token)])
+def elegir(m: Eleccion) -> dict:
+    """La educadora TOCÓ un botón para elegir al niño/a de un homónimo. Registra la observación
+    que quedó pendiente (guardada al detectar la ambigüedad) para el id_nino elegido."""
+    ctx = _ctx_remitente(m.from_)
+    if not ctx:
+        return {"ok": False, "estado": "remitente_desconocido", "ack": "⚠️ No reconozco este número."}
+    filas = _filas_ctx(ctx)
+    if m.id_nino not in {f["id_nino"] for f in filas}:
+        return {"ok": False, "estado": "no_en_sala", "ack": "⚠️ Ese niño/a no está en tu sala."}
+    pend = _PEND_DESAMB.get(_clave_tel(m.from_))
+    if not pend or (time.time() - pend["ts"]) > 900:   # 15 min para elegir
+        return {"ok": False, "estado": "sin_pendiente",
+                "ack": "⚠️ No tengo un caso pendiente para ese botón. Reenvía la observación."}
+    nin = plat.nino(m.id_nino) or {}
+    reg = _registrar_uno(nin, ctx[0]["id_educadora"], pend["texto_clas"], pend["revisar_u2"],
+                         date.today().isoformat(), "elegido", pend.get("formato", "texto"))
+    _PEND_DESAMB.pop(_clave_tel(m.from_), None)
+    return {"ok": True, **reg, "ack": _ack_registros([reg], [])}
 
 
 class MediaMsg(BaseModel):

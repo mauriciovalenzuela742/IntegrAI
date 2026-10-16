@@ -3,6 +3,7 @@ import { CampanaNotificaciones } from './components/CampanaNotificaciones';
 import { useRevision } from './data/RevisionContext';
 import { Curso } from './pages/Curso';
 import { Cursos } from './pages/Cursos';
+import { Experiencia } from './pages/Experiencia';
 import { Jardines } from './pages/Jardines';
 import { Nino } from './pages/Nino';
 import { Pendientes } from './pages/Pendientes';
@@ -43,6 +44,7 @@ export function App() {
               <nav className="navegacion" aria-label="Navegación principal">
                 <NavLink to="/" end>Cursos</NavLink>
                 <NavLink to="/jardines">Jardines</NavLink>
+                <NavLink to="/experiencia">Acompañamiento</NavLink>
                 <NavLink to="/pendientes">Por verificar</NavLink>
               </nav>
               <Link className="boton boton--secundario" to="/profesora">
@@ -60,9 +62,11 @@ export function App() {
             <Route path="/curso/:idJardin/:sala" element={<Curso />} />
             <Route path="/nino/:idNino" element={<Nino />} />
             <Route path="/jardines" element={profesora ? <Navigate to="/profesora/inicio" replace /> : <Jardines />} />
+            <Route path="/experiencia" element={profesora ? <Navigate to="/profesora/experiencia" replace /> : <Experiencia modo="coordinacion" />} />
             <Route path="/pendientes" element={profesora ? <Navigate to="/profesora/inicio" replace /> : <Pendientes />} />
             <Route path="/profesora" element={profesora ? <Navigate to="/profesora/inicio" replace /> : <ProfesoraIngreso />} />
             <Route path="/profesora/inicio" element={profesora ? <ProfesoraInicio /> : <Navigate to="/profesora" replace />} />
+            <Route path="/profesora/experiencia" element={profesora ? <Experiencia modo="profesora" /> : <Navigate to="/profesora" replace />} />
             <Route path="*" element={<Navigate to={inicio} replace />} />
           </Routes>
         </div>

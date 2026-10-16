@@ -8,11 +8,24 @@ La edad solo elige el tramo; no da prior de nivel dentro del tramo (evita la tra
 """
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from . import marcos
 from .matcher import Matcher
 from .modelo_decision import softmax
+
+
+# Umbral de confianza del JUEZ (Claude) para escalar a revisión humana. La autoconfianza del LLM
+# está SUB-calibrada (rara vez supera ~0.7): con el 0.6 fijo, casi toda observación real caía a la
+# cola (bench: nivel correcto con confianza 0.2-0.6). 0.5 como punto de partida, ajustable por env
+# (JUEZ_CONFIANZA_MIN) y a recalibrar con Integra sobre datos etiquetados.
+CONFIANZA_MIN = float(os.getenv("JUEZ_CONFIANZA_MIN", "0.5"))
+
+
+def _requiere_revision(confianza: float, evidencia_ok: bool) -> bool:
+    """¿Escalar a la educadora? Sí si la confianza del juez < CONFIANZA_MIN o la evidencia no es literal."""
+    return confianza < CONFIANZA_MIN or not evidencia_ok
 
 
 class ClasificadorRubrica:
@@ -121,7 +134,7 @@ class JuezRubrica:
         evidencia_ok = cita_valida(v.evidencia, texto)
         return {"estado": "ok", "marco": self.marco.id, "tramo": tramo, "nivel": v.nivel,
                 "nombre_nivel": self.marco.nombre_nivel(tramo, v.nivel), "segundo": v.segundo,
-                "confianza": v.confianza, "requiere_revision": v.confianza < 0.6 or not evidencia_ok,
+                "confianza": v.confianza, "requiere_revision": _requiere_revision(v.confianza, evidencia_ok),
                 "evidencia": v.evidencia, "evidencia_literal": evidencia_ok,
                 "justificacion": v.justificacion, "margen": round(v.confianza, 3)}
 

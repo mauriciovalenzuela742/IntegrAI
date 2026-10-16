@@ -112,36 +112,87 @@ def fanout(raw: bytes, path: str) -> None:
         print(f"[fanout] error: {e!r}", flush=True)
 
 
-def procesar_texto(de: str, texto: str) -> str:
+def procesar_texto(de: str, texto: str) -> dict:
+    """Devuelve la respuesta COMPLETA del backend (puede traer `tipo`/`opciones` para botones)."""
     if not BACKEND_URL:
-        return "registrado ✓ (sin backend)"
+        return {"ack": "registrado ✓ (sin backend)"}
     try:
         with httpx.Client(timeout=120) as c:
             r = c.post(f"{BACKEND_URL}/procesar", json={"from": de, "texto": texto}, headers=_headers_backend())
-            return r.json().get("ack") or "registrado ✓"
+            d = r.json()
+            d.setdefault("ack", "registrado ✓")
+            return d
     except Exception as e:  # noqa: BLE001
         print(f"[backend] error: {e!r}", flush=True)
-        return "⚠️ Recibí tu mensaje, pero no pude procesarlo ahora."
+        return {"ack": "⚠️ Recibí tu mensaje, pero no pude procesarlo ahora."}
 
 
-def procesar_media(de: str, tipo: str, blob: bytes, caption: str) -> str:
+def procesar_media(de: str, tipo: str, blob: bytes, caption: str) -> dict:
     if not BACKEND_URL:
-        return "registrado ✓ (sin backend)"
+        return {"ack": "registrado ✓ (sin backend)"}
     # el video va como video: el backend lo analiza visualmente (Pegasus) + audio
     # (antes iba al OCR como si fuera una imagen y fallaba)
     tipo_be = {"audio": "audio", "video": "video", "image": "image"}.get(tipo)
     if not tipo_be:
-        return "⚠️ Ese tipo de archivo no se procesa. Envía texto, foto, audio o video."
+        return {"ack": "⚠️ Ese tipo de archivo no se procesa. Envía texto, foto, audio o video."}
     try:
         with httpx.Client(timeout=180) as c:
             r = c.post(f"{BACKEND_URL}/procesar_media",
                        json={"from": de, "tipo": tipo_be,
                              "media_b64": base64.b64encode(blob).decode(),
                              "caption": caption or ""}, headers=_headers_backend())
-            return r.json().get("ack") or "registrado ✓"
+            d = r.json()
+            d.setdefault("ack", "registrado ✓")
+            return d
     except Exception as e:  # noqa: BLE001
         print(f"[backend-media] error: {e!r}", flush=True)
-        return "⚠️ Recibí el archivo, pero no pude procesarlo ahora."
+        return {"ack": "⚠️ Recibí el archivo, pero no pude procesarlo ahora."}
+
+
+async def enviar_botones(destino: str, texto: str, opciones: list) -> None:
+    """Mensaje INTERACTIVO con botones (WhatsApp Cloud API: máx 3, título <= 20 car.).
+    Así la educadora NO tiene que escribir: toca el botón y listo. Si algo falla -> texto."""
+    botones = [{"type": "reply", "reply": {"id": str(o["id"]), "title": str(o["titulo"])[:20]}}
+               for o in opciones[:3]]
+    if DRY_RUN or not (WA_TOKEN and PHONE_ID) or not botones:
+        await enviar_texto(destino, texto)
+        return
+    try:
+        async with httpx.AsyncClient(timeout=20) as c:
+            r = await c.post(f"{GRAPH}/{PHONE_ID}/messages",
+                             headers={"Authorization": f"Bearer {WA_TOKEN}"},
+                             json={"messaging_product": "whatsapp", "to": destino, "type": "interactive",
+                                   "interactive": {"type": "button", "body": {"text": texto},
+                                                   "action": {"buttons": botones}}})
+            print(f"[botones] -> {r.status_code}", flush=True)
+            if r.status_code >= 400:
+                print(f"[botones] fallback a texto: {r.text[:200]}", flush=True)
+                await enviar_texto(destino, texto)
+    except Exception as e:  # noqa: BLE001
+        print(f"[botones] error: {e!r}", flush=True)
+        await enviar_texto(destino, texto)
+
+
+def elegir_nino(de: str, id_nino: str) -> str:
+    """La educadora tocó un botón -> el backend registra la observación pendiente para ese niño/a."""
+    if not BACKEND_URL:
+        return "registrado ✓"
+    try:
+        with httpx.Client(timeout=120) as c:
+            r = c.post(f"{BACKEND_URL}/elegir", json={"from": de, "id_nino": id_nino}, headers=_headers_backend())
+            return r.json().get("ack") or "registrado ✓"
+    except Exception as e:  # noqa: BLE001
+        print(f"[backend-elegir] error: {e!r}", flush=True)
+        return "⚠️ No pude registrar la elección. Reenvía la observación."
+
+
+async def responder(destino: str, resp: dict) -> None:
+    """Responde por WhatsApp: botones si el backend los ofreció, si no texto."""
+    if isinstance(resp, dict) and resp.get("tipo") == "elegir_nino" and resp.get("opciones"):
+        await enviar_botones(destino, resp.get("texto") or "¿A cuál te refieres?", resp["opciones"])
+    else:
+        ack = resp.get("ack") if isinstance(resp, dict) else resp
+        await enviar_texto(destino, ack or "registrado ✓")
 
 
 # --------------------------------------------------------------------------- #
@@ -195,6 +246,17 @@ async def procesar(raw: bytes, phone: str, query: str) -> None:
                     print(f"[msg] remitente no autorizado {mask(de)} -> descartado", flush=True)
                     continue
                 tipo = msg.get("type", "")
+
+                # --- botón tocado (desambiguación de homónimo) ---
+                if tipo == "interactive":
+                    inter = msg.get("interactive", {}) or {}
+                    br = inter.get("button_reply") or inter.get("list_reply") or {}
+                    id_nino = br.get("id", "")
+                    print(f"[boton] de={mask(de)} id={id_nino}", flush=True)
+                    if id_nino:
+                        await enviar_texto(de, elegir_nino(de, id_nino))
+                    continue
+
                 texto, media_id, caption = "", None, ""
                 if tipo == "text":
                     texto = msg.get("text", {}).get("body", "")
@@ -210,12 +272,12 @@ async def procesar(raw: bytes, phone: str, query: str) -> None:
                         await enviar_texto(de, "⚠️ Recibí el archivo pero no pude descargarlo. Reenvíalo.")
                         continue
                     print(f"[media] {tipo} -> {len(blob)} bytes", flush=True)
-                    ack = procesar_media(de, tipo, blob, caption)
+                    resp = procesar_media(de, tipo, blob, caption)
                 else:
-                    ack = procesar_texto(de, texto) if texto else "registrado ✓"
+                    resp = procesar_texto(de, texto) if texto else {"ack": "registrado ✓"}
 
                 print(f"[ack] enviado a {mask(de)}", flush=True)
-                await enviar_texto(de, ack)
+                await responder(de, resp)
 
 
 if __name__ == "__main__":  # pragma: no cover

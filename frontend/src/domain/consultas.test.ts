@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import type { Datos } from '../data/cargar';
 import {
   alumnosDeCurso,
+  alumnoDesde,
   resumenCursos,
   distribucionNiveles,
   fichaNino,
@@ -163,5 +164,93 @@ describe('rezago relativo + panorama de jardín', () => {
     expect(j1?.totalSalas).toBe(1);
     expect(j1?.totalNinos).toBe(3);
     expect(j1?.nombreJardin).toBe('Jardín Uno');
+  });
+});
+
+
+describe('causas de atención separadas', () => {
+  const ninoBase = datos.ninos[0]!;
+  const observaciones = datos.observaciones.filter((o) => o.idNino === ninoBase.idNino);
+
+  it('calcula alerta etaria aun cuando existe evaluación consolidada', () => {
+    const alumno = alumnoDesde(ninoBase, observaciones, datos.niveles, HOY, {
+      idNino: ninoBase.idNino,
+      dominio: 'global',
+      nivel: 1,
+      margen: 0.7,
+      periodo: '2026-01-01',
+      tendencia: 'estable',
+      alerta: null,
+      origen: 'auto',
+    });
+
+    expect(alumno.brecha).toBe(-2);
+    expect(alumno.alertaEdad).toBe(true);
+    expect(alumno.alertaRubrica).toBeNull();
+    expect(alumno.alerta).toBe(true);
+  });
+
+  it('conserva una señal de rúbrica independiente de la brecha etaria', () => {
+    const alumno = alumnoDesde(ninoBase, observaciones, datos.niveles, HOY, {
+      idNino: ninoBase.idNino,
+      dominio: 'global',
+      nivel: 3,
+      margen: 0.7,
+      periodo: '2026-01-01',
+      tendencia: 'estable',
+      alerta: 'Señal del marco vigente',
+      origen: 'manual:EDU-1',
+    });
+
+    expect(alumno.alertaEdad).toBe(false);
+    expect(alumno.alertaRubrica).toBe('Señal del marco vigente');
+    expect(alumno.alerta).toBe(true);
+    expect(alumno.ajustadoManual).toBe(true);
+  });
+
+  it('marca solo rezago relativo cuando la brecha etaria no alcanza el umbral', () => {
+    const datosRelativos: Datos = {
+      ...datos,
+      ninos: ['A', 'B', 'C'].map((id) => ({
+        idNino: id,
+        fechaNacimiento: '2023-01-01',
+        idJardin: 'JAR-1',
+        salaGrupo: 'SG-A',
+        fechaIngreso: '',
+      })),
+      observaciones: [
+        { idObservacion: 'OA', idNino: 'A', fechaObservacion: '2025-12-01', formatoCaptura: 'texto', nivelEstimado: 6 },
+        { idObservacion: 'OB', idNino: 'B', fechaObservacion: '2025-12-01', formatoCaptura: 'texto', nivelEstimado: 6 },
+        { idObservacion: 'OC', idNino: 'C', fechaObservacion: '2025-12-01', formatoCaptura: 'texto', nivelEstimado: 4 },
+      ],
+      evaluaciones: [],
+    };
+
+    const alumno = alumnosDeCurso(datosRelativos, 'JAR-1', 'SG-A', HOY)
+      .find((actual) => actual.idNino === 'C');
+    expect(alumno?.brecha).toBe(-1);
+    expect(alumno?.alertaEdad).toBe(false);
+    expect(alumno?.alertaRubrica).toBeNull();
+    expect(alumno?.rezagoRelativo).toBe(true);
+    expect(alumno?.alerta).toBe(true);
+  });
+
+  it('propaga las causas separadas a la ficha', () => {
+    const conEval: Datos = {
+      ...datos,
+      evaluaciones: [{
+        idNino: 'NINO-1',
+        dominio: 'global',
+        nivel: 1,
+        margen: 0.4,
+        periodo: '2026-01-01',
+        tendencia: 'estable',
+        alerta: 'Señal de rúbrica',
+      }],
+    };
+    const ficha = fichaNino(conEval, 'NINO-1', HOY);
+    expect(ficha?.alertaRubrica).toBe('Señal de rúbrica');
+    expect(ficha?.alertaEdad).toBe(true);
+    expect(ficha?.alerta).toBe(true);
   });
 });

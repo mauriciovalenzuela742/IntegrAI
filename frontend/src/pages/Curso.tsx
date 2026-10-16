@@ -172,9 +172,13 @@ export function Curso() {
 const columnasBase: Columna<AlumnoCurso>[] = [
   {
     clave: 'codigo',
-    encabezado: 'Código',
-    valor: (a) => a.idNino,
-    render: (a) => <Link to={`/nino/${a.idNino}`}>{a.idNino}</Link>,
+    encabezado: 'Niño/a',
+    valor: (a) => a.nombreVisible || a.idNino,
+    render: (a) => (
+      <Link to={`/nino/${a.idNino}`} title={a.idNino}>
+        {a.nombreVisible || a.idNino}
+      </Link>
+    ),
   },
   {
     clave: 'edad',

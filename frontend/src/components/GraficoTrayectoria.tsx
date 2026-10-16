@@ -13,7 +13,13 @@ interface Punto {
   nivel: number;
 }
 
-export function GraficoTrayectoria({ datos }: { datos: Punto[] }) {
+interface Props {
+  datos: Punto[];
+  minNivel?: number;
+  maxNivel?: number;
+}
+
+export function GraficoTrayectoria({ datos, minNivel = 1, maxNivel = 9 }: Props) {
   return (
     <div
       className="grafico"
@@ -24,7 +30,7 @@ export function GraficoTrayectoria({ datos }: { datos: Punto[] }) {
         <LineChart data={datos} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e5ea" />
           <XAxis dataKey="fecha" tickLine={false} />
-          <YAxis domain={[1, 9]} allowDecimals={false} tickLine={false} width={32} />
+          <YAxis domain={[minNivel, maxNivel]} allowDecimals={false} tickLine={false} width={32} />
           <Tooltip
             formatter={(valor: number) => [`${valor}`, 'Nivel']}
             labelFormatter={(fecha) => `Fecha ${fecha}`}

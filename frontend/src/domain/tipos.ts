@@ -17,6 +17,8 @@ export interface Jardin {
 
 export interface Nino {
   idNino: string;
+  /** Etiqueta legible "Nombre I." (nombre de pila + inicial). Nunca el nombre completo. */
+  nombreVisible?: string;
   fechaNacimiento: string;
   idJardin: string;
   salaGrupo: string;
@@ -76,6 +78,8 @@ export interface Profesora {
 export interface Pendiente {
   idPendiente: string;
   idNinoPropuesto: string;
+  /** Etiqueta legible del niño/a ("Emilia Co."); si falta, la UI cae al código. */
+  nombreVisible?: string;
   idEducadora: string | null;
   nivelPropuesto: number | null;
   dominio: string | null;

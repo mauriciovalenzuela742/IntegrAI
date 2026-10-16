@@ -101,6 +101,7 @@ function jardinesDesde(filas: Fila[]): Jardin[] {
 function ninosDesde(filas: Fila[]): Nino[] {
   return filas.map((f) => ({
     idNino: f.id_nino ?? '',
+    nombreVisible: f.nombre_visible ?? '',
     fechaNacimiento: f.fecha_nacimiento ?? '',
     idJardin: f.id_jardin ?? '',
     salaGrupo: f.sala_grupo ?? '',
@@ -214,6 +215,7 @@ function pendienteDesde(f: Record<string, unknown>): Pendiente {
   return {
     idPendiente: txt(f.id_pendiente),
     idNinoPropuesto: txt(f.id_nino_propuesto),
+    nombreVisible: txt(f.nombre_visible),
     idEducadora: f.id_educadora ? String(f.id_educadora) : null,
     nivelPropuesto: num(f.nivel_propuesto),
     dominio: f.dominio ? String(f.dominio) : null,
